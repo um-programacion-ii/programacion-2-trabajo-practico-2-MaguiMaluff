@@ -1,8 +1,8 @@
 package Gestion;
-import Recursos.RecursoDigital;
+import Recursos.RecursoBase;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GestorRecursos {
-    private List<RecursoDigital> recursos = new ArrayList<>();
+    private List<RecursoBase> recursos = new ArrayList<>();
 }

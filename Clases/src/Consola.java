@@ -1,7 +1,6 @@
 import java.util.Scanner;
 
 import Gestion.GestorUsuarios;
-import src.Usuario;
 
 public class Consola {
     Scanner myObj = new Scanner(System.in);
@@ -20,7 +19,7 @@ public class Consola {
 
     }
     public void gestionUsuario() {
-        System.out.println("1. Gestion Usuarios" + '\n'
+        System.out.println("1. Agregar Usuarios" + '\n'
                          + "2. Buscar Usuario por Nombre" + '\n'
                          + "3. Buscar Usuario por Email" + '\n');
         Integer choice = Integer.valueOf(myObj.nextLine());

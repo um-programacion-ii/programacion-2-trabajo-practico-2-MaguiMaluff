@@ -1,5 +1,5 @@
 package Gestion;
-import src.Usuario;
+import Modelos.Usuario;
 
 import java.util.ArrayList;
 import java.util.List;
