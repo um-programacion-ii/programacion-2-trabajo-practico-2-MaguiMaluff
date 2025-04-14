@@ -8,11 +8,10 @@ import Modelos.Usuario;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public abstract class RecursoDigital implements IRecursoDigital, Prestable {
+public abstract class RecursoDigital implements IRecursoDigital {
     private String name;
     private String ID;
     private EstadoRecurso estate;
-    private LocalDateTime fechaDevolucion;
 
     public RecursoDigital(EstadoRecurso estate, String name) {
         this.ID = UUID.randomUUID().toString();
@@ -30,28 +29,13 @@ public abstract class RecursoDigital implements IRecursoDigital, Prestable {
         return estate;
     }
 
-    @Override
-    public boolean estaDisponible(){
-        if (this.estate == EstadoRecurso.DISPONIBLE){
-            return true;
-        }else{
-            return false;}
-    }
-
-    @Override
-    public LocalDateTime getFechaDevolucion(){
-        return fechaDevolucion;
-    }
 
     @Override
     public String getIdentificador() {
         return ID;
     }
 
-    @Override
-    public void prestar(Usuario usuario){
 
-    }
 
     public void showInfo() {
     }

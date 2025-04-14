@@ -1,11 +1,16 @@
 package Modelos;
 
+import Interfaces.Prestable;
+import Interfaces.Renovable;
 import Recursos.RecursoDigital;
 
-public class Revista extends RecursoDigital {
+import java.time.LocalDateTime;
+
+public class Revista extends RecursoDigital implements Prestable, Renovable {
     private String marca;
     private Integer issue;
-
+    private LocalDateTime fechaDevolucion = null;
+    private Usuario tiene = null;
     public Revista(EstadoRecurso estate, String marca, Integer issue, String name) {
         super(estate, name);
         this.marca = marca;
@@ -18,6 +23,34 @@ public class Revista extends RecursoDigital {
                             "Issue: " + this.getIssue() + '\n' +
                             "Estado: " + this.getEstado() + '\n' +
                             "ID: " + this.getIdentificador() + '\n');
+        if (this.getEstado().equals(EstadoRecurso.PRESTADO)){
+            System.out.println("Fecha Devolucion: " + this.getFechaDevolucion() + '\n' +
+                                "Usuario: " + this.getTiene());
+
+        }
+    }
+
+    public void prestar(Usuario usuario){
+        this.setEstado(EstadoRecurso.PRESTADO);
+        this.tiene = usuario;
+
+    }
+
+    public void renovar(Usuario usuario) {
+        if (getEstado() == EstadoRecurso.PRESTADO && this.tiene.equals(usuario)) {
+            this.fechaDevolucion = fechaDevolucion.plusDays(7);
+            System.out.println("Renovación exitosa. Nueva fecha: " + fechaDevolucion);
+        } else {
+            System.out.println("El libro no está prestado, no se puede renovar.");
+        }
+    }
+
+    @Override
+    public boolean estaDisponible(){
+        if(this.getEstado() == EstadoRecurso.DISPONIBLE){
+            return true;
+        }else{
+            return false;}
     }
 
     public String getMarca() {
@@ -34,5 +67,21 @@ public class Revista extends RecursoDigital {
 
     public void setIssue(Integer issue) {
         this.issue = issue;
+    }
+
+    public LocalDateTime getFechaDevolucion() {
+        return fechaDevolucion;
+    }
+
+    public void setFecha(LocalDateTime fecha) {
+        this.fechaDevolucion = fecha;
+    }
+
+    public Usuario getTiene() {
+        return tiene;
+    }
+
+    public void setTiene(Usuario tiene) {
+        this.tiene = tiene;
     }
 }
