@@ -1,4 +1,4 @@
-package Recursos;
+package Modelos;
 
 public enum EstadoRecurso {
     DISPONIBLE,

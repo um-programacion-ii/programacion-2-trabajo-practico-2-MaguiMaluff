@@ -2,36 +2,37 @@ package Recursos;
 
 import Interfaces.IRecursoDigital;
 import Interfaces.Prestable;
+import Modelos.EstadoRecurso;
 import Modelos.Usuario;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public abstract class RecursoDigital implements IRecursoDigital, Prestable {
-
+    private String name;
     private String ID;
-    private EstadoRecurso estado;
+    private EstadoRecurso estate;
     private LocalDateTime fechaDevolucion;
 
-    public RecursoDigital(String ID, EstadoRecurso estado) {
-
+    public RecursoDigital(EstadoRecurso estate, String name) {
         this.ID = UUID.randomUUID().toString();
-        this.estado = estado;
+        this.estate = estate;
+        this.name = name;
     }
 
     @Override
-    public void actualizarEstado(EstadoRecurso estado){
-        this.estado = estado;
+    public void actualizarEstado(EstadoRecurso estate){
+        this.estate = estate;
     }
 
     @Override
     public EstadoRecurso getEstado() {
-        return estado;
+        return estate;
     }
 
     @Override
     public boolean estaDisponible(){
-        if (this.estado == EstadoRecurso.DISPONIBLE){
+        if (this.estate == EstadoRecurso.DISPONIBLE){
             return true;
         }else{
             return false;}
@@ -52,10 +53,21 @@ public abstract class RecursoDigital implements IRecursoDigital, Prestable {
 
     }
 
-    public void setEstado(EstadoRecurso estado) {
-        this.estado = estado;
+    public void showInfo(RecursoDigital recurso) {
+        System.out.println("Nombre: " + recurso.getNombre() + '\n' +
+                            "Estado: " + recurso.getEstado() + '\n' +
+                            "ID: " + recurso.getIdentificador() + '\n');
     }
 
+    public void setEstado(EstadoRecurso estate) {
+        this.estate = estate;
+    }
 
+    public String getNombre() {
+        return name;
+    }
 
+    public void setNombre(String name) {
+        this.name = name;
+    }
 }

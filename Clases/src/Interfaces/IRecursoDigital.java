@@ -1,9 +1,9 @@
 package Interfaces;
 
-import Recursos.EstadoRecurso;
+import Modelos.EstadoRecurso;
 
 public interface IRecursoDigital {
     String getIdentificador();
     EstadoRecurso getEstado();
-    void actualizarEstado(EstadoRecurso estado);
+    void actualizarEstado(EstadoRecurso estate);
 }
