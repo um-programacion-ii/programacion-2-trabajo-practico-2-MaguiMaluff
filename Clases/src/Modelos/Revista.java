@@ -12,13 +12,12 @@ public class Revista extends RecursoDigital {
         this.issue = issue;
     }
 
-    public void showInfo(RecursoDigital recurso) {
-        Revista revista = (Revista) recurso;
-        System.out.println("Nombre: " + revista.getNombre() + '\n' +
-                            "Marca: " + revista.getMarca() + '\n' +
-                            "Issue: " + revista.getIssue() + '\n' +
-                            "Estado: " + revista.getEstado() + '\n' +
-                            "ID: " + revista.getIdentificador() + '\n');
+    public void showInfo() {
+        System.out.println("Nombre: " + this.getNombre() + '\n' +
+                            "Marca: " + this.getMarca() + '\n' +
+                            "Issue: " + this.getIssue() + '\n' +
+                            "Estado: " + this.getEstado() + '\n' +
+                            "ID: " + this.getIdentificador() + '\n');
     }
 
     public String getMarca() {
