@@ -52,7 +52,7 @@ public class GestorRecursos {
         boolean notFound = true;
         for (RecursoDigital recurso : recursos) {
             if (recurso.getNombre().trim().equalsIgnoreCase(name.trim())){
-                recurso.showInfo(recurso);
+                recurso.showInfo();
                 notFound = false;
                 break;
             }
@@ -68,7 +68,7 @@ public class GestorRecursos {
             System.out.println("No hay recursos cargados");
         } else {
             for (RecursoDigital recurso : recursos) {
-                recurso.showInfo(recurso);
+                recurso.showInfo();
             }
         }
     }

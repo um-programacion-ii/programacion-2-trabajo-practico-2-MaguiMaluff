@@ -11,12 +11,11 @@ public class Libro extends RecursoDigital {
 
     }
 
-    public void showInfo(RecursoDigital recurso) {
-        Libro libro = (Libro) recurso;
-        System.out.println("Nombre: " + libro.getNombre() + '\n' +
-                            "Autor: " + libro.getAutor() + '\n' +
-                            "Estado: " + libro.getEstado() + '\n' +
-                            "ID: " + libro.getIdentificador() +'\n');
+    public void showInfo() {
+        System.out.println("Nombre: " + this.getNombre() + '\n' +
+                            "Autor: " + this.getAutor() + '\n' +
+                            "Estado: " + this.getEstado() + '\n' +
+                            "ID: " + this.getIdentificador() +'\n');
     }
 
     public String getAutor() {

@@ -53,10 +53,7 @@ public abstract class RecursoDigital implements IRecursoDigital, Prestable {
 
     }
 
-    public void showInfo(RecursoDigital recurso) {
-        System.out.println("Nombre: " + recurso.getNombre() + '\n' +
-                            "Estado: " + recurso.getEstado() + '\n' +
-                            "ID: " + recurso.getIdentificador() + '\n');
+    public void showInfo() {
     }
 
     public void setEstado(EstadoRecurso estate) {
