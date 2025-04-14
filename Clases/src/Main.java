@@ -8,8 +8,8 @@ public class Main {
 
 
         Consola consola = new Consola();
-        consola.myGestorUsuarios.newUser("Nombre ejemplo", "sofia@example.com");
-        consola.myGestorRecursos.agregarLibro(EstadoRecurso.DISPONIBLE,  "Java Avanzado", "Autor Ejemplo");
+        consola.myGestorUsuarios.newUser("X", "sofia@example.com");
+        consola.myGestorRecursos.agregarLibro(EstadoRecurso.DISPONIBLE,  "N", "Autor Ejemplo");
         consola.menu();
     }
 }
