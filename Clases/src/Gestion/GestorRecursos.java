@@ -48,19 +48,15 @@ public class GestorRecursos {
     }
 
 
-    public void buscarPorNombre(String name) {
-        boolean notFound = true;
+    public RecursoDigital buscarPorNombre(String name) {
         for (RecursoDigital recurso : recursos) {
             if (recurso.getNombre().trim().equalsIgnoreCase(name.trim())){
                 recurso.showInfo();
-                notFound = false;
-                break;
+                return recurso;
             }
         }
-        if (notFound){
-            System.out.println("Recurso no encontrado");
-        }
-
+        System.out.println("Recurso no encontrado");
+        return null;
     }
 
     public void listarRecursos() {

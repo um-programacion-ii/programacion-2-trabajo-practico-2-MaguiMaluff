@@ -21,17 +21,15 @@ public class GestorUsuarios {
         }
     }
 
-    public void searchUserName(String name){
-        boolean notFound = true;
+    public Usuario searchUserName(String name){
         for (Usuario user : users) {
-            if (user.getName().equals(name)){
+            if (user.getName().trim().equalsIgnoreCase(name.trim())){
                 showInfo(user);
-                notFound = false;
-            }
-        if (notFound){
-                System.out.println("Usuario no encontrado");
+                return user;
             }
         }
+        System.out.println("Usuario no encontrado");
+        return null;
     }
 
     public void searchUserEmail(String email){
