@@ -1,17 +1,14 @@
 package Modelos;
 
+import java.util.UUID;
+
 public class Usuario {
-    public static int ID_counter = 0;
-    private int ID;
+    private String ID;
     private String name;
     private String email;
 
-    public int getID() {
+    public String  getID() {
         return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
     }
 
     public String getName() {
@@ -31,7 +28,7 @@ public class Usuario {
     }
 
     public Usuario(String name, String email) {
-        this.ID = ID_counter++;
+        this.ID = UUID.randomUUID().toString();
         this.name = name;
         this.email = email;
     }

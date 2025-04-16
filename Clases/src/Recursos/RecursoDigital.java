@@ -1,11 +1,7 @@
 package Recursos;
 
 import Interfaces.IRecursoDigital;
-import Interfaces.Prestable;
-import Modelos.EstadoRecurso;
-import Modelos.Usuario;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public abstract class RecursoDigital implements IRecursoDigital {

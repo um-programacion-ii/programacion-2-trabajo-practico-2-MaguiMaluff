@@ -4,6 +4,8 @@
 # Log files
 *.log
 
+
+
 # BlueJ files
 *.ctxt
 
@@ -18,7 +20,7 @@
 *.zip
 *.tar.gz
 *.rar
-
+*.Excepciones
 # virtual machine crash logs
 hs_err_pid*
 replay_pid*
@@ -30,3 +32,5 @@ replay_pid*
 .classpath
 .project
 .settings/
+
+Excepciones

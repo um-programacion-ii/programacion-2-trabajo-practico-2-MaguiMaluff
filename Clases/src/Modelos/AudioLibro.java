@@ -1,5 +1,6 @@
 package Modelos;
 
+import Recursos.EstadoRecurso;
 import Recursos.RecursoDigital;
 
 public class AudioLibro extends RecursoDigital {

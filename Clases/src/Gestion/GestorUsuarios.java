@@ -2,10 +2,12 @@ package Gestion;
 import Modelos.Usuario;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GestorUsuarios {
-    private List<Usuario> users = new ArrayList<>();
+    private Map<String, Usuario> users = new HashMap<>();
 
     public void newUser(String name, String email){
         if (name == null || email == null || !email.contains("@")){
@@ -13,16 +15,17 @@ public class GestorUsuarios {
         }else{
 
             Usuario new_user = new Usuario(name, email);
-            this.users.add(new_user);
+            this.users.put(new_user.getID(),new_user);
 
-            if (users.contains(new_user)){
+            if (users.get(new_user.getID()) != null){
                 System.out.println("Usuario creado exitosamente");
                 }
         }
     }
 
     public Usuario searchUserName(String name){
-        for (Usuario user : users) {
+        for (Map.Entry<String, Usuario> entrada : users.entrySet()) {
+            Usuario user = entrada.getValue();
             if (user.getName().trim().equalsIgnoreCase(name.trim())){
                 showInfo(user);
                 return user;
@@ -32,16 +35,16 @@ public class GestorUsuarios {
         return null;
     }
 
-    public void searchUserEmail(String email){
-        boolean notFound = true;
-        for (Usuario user : users) {
+    public Usuario searchUserEmail(String email){
+        for (Map.Entry<String, Usuario> entrada : users.entrySet()) {
+            Usuario user = entrada.getValue();
             if (user.getEmail().equals(email)) {
                 showInfo(user);
-                notFound = false;
+                return user;
             }
-        }if (notFound){
-                System.out.println("Usuario no encontrado");
         }
+        System.out.println("Usuario no encontrado");
+        return null;
     }
 
     public void showInfo(Usuario user){
