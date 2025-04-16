@@ -1,6 +1,6 @@
 package Interfaces;
 
-import Modelos.EstadoRecurso;
+import Recursos.EstadoRecurso;
 
 public interface IRecursoDigital {
     String getIdentificador();

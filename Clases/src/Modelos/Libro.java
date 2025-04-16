@@ -2,17 +2,17 @@ package Modelos;
 
 import Interfaces.Prestable;
 import Interfaces.Renovable;
-import Interfaces.ServicioNotificaciones;
+import Recursos.EstadoRecurso;
 import Recursos.RecursoDigital;
+import Servicios.ServicioNotificacionesEmail;
 
 import java.time.LocalDateTime;
-import java.util.SortedMap;
 
 public class Libro extends RecursoDigital implements Prestable, Renovable {
     private String autor;
     private LocalDateTime fechaDevolucion = null;
     private Usuario tiene = null;
-    private ServicioNotificacionesEmail servicioNotificaciones = new ServicioNotificacionesEmail();
+    private static ServicioNotificacionesEmail servicioNotificaciones = new ServicioNotificacionesEmail();
 
     public Libro(EstadoRecurso estate, String autor, String name) {
         super(estate, name);

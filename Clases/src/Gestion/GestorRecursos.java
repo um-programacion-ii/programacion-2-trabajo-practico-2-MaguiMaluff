@@ -1,6 +1,7 @@
 package Gestion;
+import Excepciones.DatosErroneosException;
 import Modelos.AudioLibro;
-import Modelos.EstadoRecurso;
+import Recursos.EstadoRecurso;
 import Modelos.Libro;
 import Modelos.Revista;
 import Recursos.*;
@@ -25,7 +26,7 @@ public class GestorRecursos {
 
     public void agregarAudioLibro(EstadoRecurso estate, String name, String autor, String lector) {
         if (name == null || autor == null || lector == null){
-            System.out.println("Ingrese los datos correctamente");
+            throw new DatosErroneosException("Ingrese los datos correctamente");
         }
         AudioLibro audio = new AudioLibro(estate, lector, autor, name);
         recursos.add(audio);
@@ -37,7 +38,7 @@ public class GestorRecursos {
 
     public void agregarRevista(EstadoRecurso estate, String marca, Integer issue, String name) {
         if (marca == null || issue == null ){
-            System.out.println("Ingrese los datos correctamente");
+            throw new DatosErroneosException("Ingrese los datos correctamente");
         }
         Revista revista = new Revista(estate, marca, issue, name);
         recursos.add(revista);
@@ -58,6 +59,28 @@ public class GestorRecursos {
         System.out.println("Recurso no encontrado");
         return null;
     }
+
+    public List<RecursoDigital> buscarPorTipo(Class<?> tipo) {
+        List<RecursoDigital> filtrados = new ArrayList<>();
+
+        for (RecursoDigital recurso : recursos) {
+            if (tipo.isInstance(recurso)) {
+                filtrados.add(recurso);
+            }
+        }
+
+        if (filtrados.isEmpty()) {
+            System.out.println("No se encontraron recursos del tipo: " + tipo.getSimpleName());
+        } else {
+            for (RecursoDigital recurso : filtrados) {
+                recurso.showInfo();
+            }
+        }
+
+        return filtrados;
+    }
+
+
 
     public void listarRecursos() {
         if (recursos.isEmpty()) {

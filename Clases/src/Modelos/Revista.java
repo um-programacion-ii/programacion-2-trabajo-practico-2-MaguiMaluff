@@ -2,7 +2,9 @@ package Modelos;
 
 import Interfaces.Prestable;
 import Interfaces.Renovable;
+import Recursos.EstadoRecurso;
 import Recursos.RecursoDigital;
+import Servicios.ServicioNotificacionesSMS;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +13,7 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
     private Integer issue;
     private LocalDateTime fechaDevolucion = null;
     private Usuario tiene = null;
-    private ServicioNotificacionesSMS  servicioNotificaciones = new ServicioNotificacionesSMS();
+    private static ServicioNotificacionesSMS servicioNotificaciones = new ServicioNotificacionesSMS();
 
     public Revista(EstadoRecurso estate, String marca, Integer issue, String name) {
         super(estate, name);

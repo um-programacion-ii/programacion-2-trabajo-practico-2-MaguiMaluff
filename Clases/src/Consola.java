@@ -4,7 +4,7 @@ import Gestion.GestorRecursos;
 import Gestion.GestorUsuarios;
 import Interfaces.Prestable;
 import Interfaces.Renovable;
-import Modelos.EstadoRecurso;
+import Recursos.EstadoRecurso;
 import Modelos.Usuario;
 import Recursos.RecursoDigital;
 
@@ -14,7 +14,7 @@ public class Consola {
     GestorRecursos myGestorRecursos = new GestorRecursos();
 
     public void menu(){
-        int choice;
+        int choice = -1;
         do{
         System.out.println("""
                 1. Gestion Usuarios
@@ -23,7 +23,11 @@ public class Consola {
                 \
                 0. Salir
                 """);
-        choice = Integer.parseInt(myObj.nextLine());
+            try {
+                choice = Integer.parseInt(myObj.nextLine());
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
             switch (choice){
                 case 1:
                     gestionUsuario();
@@ -38,7 +42,7 @@ public class Consola {
             }while(choice != 0);
     }
     public void gestionUsuario() {
-        int choice;
+        int choice = -1;
         do{
         System.out.println("""
                 1. Agregar Usuarios
@@ -48,7 +52,11 @@ public class Consola {
                 3. Buscar Usuario por Email
                 \
                 0. Menu Anterior""");
-        choice = Integer.parseInt(myObj.nextLine());
+        try {
+            choice = Integer.parseInt(myObj.nextLine());
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
             switch (choice) {
                 case 1:
                     System.out.println("Nombre: ");
@@ -59,16 +67,17 @@ public class Consola {
                     break;
 
                 case 2:
-                    System.out.println("Nombre: ");
-                    String name_2 = myObj.nextLine();
-                    myGestorUsuarios.searchUserName(name_2);
-                    break;
+                        System.out.println("Nombre: ");
+                        String name_2 = myObj.nextLine();
+                        myGestorUsuarios.searchUserName(name_2);
+                        break;
 
                 case 3:
-                    System.out.println("Email: ");
-                    String email = myObj.nextLine();
-                    myGestorUsuarios.searchUserEmail(email);
-                    break;
+                        System.out.println("Email: ");
+                        String email = myObj.nextLine();
+                        myGestorUsuarios.searchUserEmail(email);
+                        break;
+
                 case 0:
                     break;
                 default:
@@ -78,7 +87,7 @@ public class Consola {
         }while(choice != 0);
     }
     public void gestionRecursos(){
-        int choice;
+        int choice = -1;
         do {
             System.out.println("""
                     1. Agregar Recurso
@@ -91,10 +100,15 @@ public class Consola {
                     \
                     5. Renovar Prestamo
                     \
+                    6. Filtrar por Tipo
+                    \
                     0. Menu Anterior
                     """);
-            choice = Integer.parseInt(myObj.nextLine());
-
+            try {
+                choice = Integer.parseInt(myObj.nextLine());
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
             switch (choice) {
                 case 1:
                     agregarRecurso();
@@ -138,6 +152,23 @@ public class Consola {
                         System.out.println("El recurso no permite renovación.");
                     }
                     break;
+                case 6:
+                    System.out.println("Tipo de recurso (Libro, Revista, AudioLibro): ");
+                    String tipo = myObj.nextLine().trim().toLowerCase();
+
+                    switch (tipo) {
+                        case "libro":
+                            myGestorRecursos.buscarPorTipo(Modelos.Libro.class);
+                            break;
+                        case "revista":
+                            myGestorRecursos.buscarPorTipo(Modelos.Revista.class);
+                            break;
+                        case "audiolibro":
+                            myGestorRecursos.buscarPorTipo(Modelos.AudioLibro.class);
+                            break;
+                        default:
+                            System.out.println("Tipo no válido");
+                    }
                 case 0:
                     break;
                 default:
@@ -147,7 +178,7 @@ public class Consola {
 
     }
     public void agregarRecurso() {
-        int choice;
+        int choice = -1;
         do{
 
         System.out.println("""
@@ -159,8 +190,11 @@ public class Consola {
                 \
                 0. Menu Anterior
                 """);
-        choice = Integer.parseInt(myObj.nextLine());
-
+            try {
+                choice = Integer.parseInt(myObj.nextLine());
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
 
         switch (choice) {
             case 1:
