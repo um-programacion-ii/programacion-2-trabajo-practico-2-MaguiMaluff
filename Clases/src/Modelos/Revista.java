@@ -2,6 +2,7 @@ package Modelos;
 
 import Interfaces.Prestable;
 import Interfaces.Renovable;
+import Recursos.CategoriaRecurso;
 import Recursos.EstadoRecurso;
 import Recursos.RecursoDigital;
 import Servicios.ServicioNotificacionesSMS;
@@ -15,10 +16,11 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
     private Usuario tiene = null;
     private static ServicioNotificacionesSMS servicioNotificaciones = new ServicioNotificacionesSMS();
 
-    public Revista(EstadoRecurso estate, String marca, Integer issue, String name) {
-        super(estate, name);
+    public Revista(EstadoRecurso estate, String marca, Integer issue, String name, CategoriaRecurso categoria) {
+        super(estate, name, categoria);
         this.marca = marca;
         this.issue = issue;
+
     }
 
     public void showInfo() {

@@ -1,14 +1,16 @@
 package Modelos;
 
+import Recursos.CategoriaRecurso;
 import Recursos.EstadoRecurso;
 import Recursos.RecursoDigital;
+import com.sun.jdi.event.ModificationWatchpointEvent;
 
 public class AudioLibro extends RecursoDigital {
     private String lector;
     private String autor;
 
-    public AudioLibro(EstadoRecurso estate, String lector, String autor, String name) {
-        super(estate, name);
+    public AudioLibro(EstadoRecurso estate, String lector, String autor, String name, CategoriaRecurso categoria) {
+        super(estate, name, categoria);
         this.lector = lector;
         this.autor = autor;
     }

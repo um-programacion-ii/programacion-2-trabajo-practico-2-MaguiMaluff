@@ -12,11 +12,11 @@ public class GestorRecursos {
     private List<RecursoDigital> recursos = new ArrayList<>();
 
 
-    public void agregarLibro(EstadoRecurso estate, String nombre, String autor) {
+    public void agregarLibro(EstadoRecurso estate, String nombre, String autor, CategoriaRecurso categoria) {
         if (nombre == null || autor == null ){
             System.out.println("Ingrese los datos correctamente");
         }
-        Libro libro = new Libro(estate, autor, nombre);
+        Libro libro = new Libro(estate, autor, nombre, categoria);
         recursos.add(libro);
         if (recursos.contains(libro)){
             System.out.println("Libro agregado exitosamente");
@@ -24,11 +24,11 @@ public class GestorRecursos {
 
     }
 
-    public void agregarAudioLibro(EstadoRecurso estate, String name, String autor, String lector) {
+    public void agregarAudioLibro(EstadoRecurso estate, String name, String autor, String lector, CategoriaRecurso categoria) {
         if (name == null || autor == null || lector == null){
             throw new DatosErroneosException("Ingrese los datos correctamente");
         }
-        AudioLibro audio = new AudioLibro(estate, lector, autor, name);
+        AudioLibro audio = new AudioLibro(estate, lector, autor, name, categoria);
         recursos.add(audio);
         if (recursos.contains(audio)){
             System.out.println("Audiolibro agregado exitosamente");
@@ -36,11 +36,11 @@ public class GestorRecursos {
 
     }
 
-    public void agregarRevista(EstadoRecurso estate, String marca, Integer issue, String name) {
+    public void agregarRevista(EstadoRecurso estate, String marca, Integer issue, String name, CategoriaRecurso categoria) {
         if (marca == null || issue == null ){
             throw new DatosErroneosException("Ingrese los datos correctamente");
         }
-        Revista revista = new Revista(estate, marca, issue, name);
+        Revista revista = new Revista(estate, marca, issue, name, categoria);
         recursos.add(revista);
         if (recursos.contains(revista)){
             System.out.println("Revista agregado exitosamente");
@@ -89,7 +89,19 @@ public class GestorRecursos {
         listarRecursos();
     }
 
+    public void buscarPorCategoria(CategoriaRecurso categoria) {
+        List<RecursoDigital> filtrados = recursos.stream()
+                .filter(r -> r.getCategoria() == categoria)
+                .toList();
 
+        if (filtrados.isEmpty()) {
+            System.out.println("No se encontraron recursos con esa categoría");
+        } else {
+            for (RecursoDigital recurso : filtrados) {
+                recurso.showInfo();
+            }
+        }
+    }
 
 
     public void listarRecursos() {
@@ -99,6 +111,12 @@ public class GestorRecursos {
             for (RecursoDigital recurso : recursos) {
                 recurso.showInfo();
             }
+        }
+    }
+
+    public  void mostrarCategoriasDisponibles(){
+        for (CategoriaRecurso categoria : CategoriaRecurso.values()){
+            System.out.println(categoria);
         }
     }
 
