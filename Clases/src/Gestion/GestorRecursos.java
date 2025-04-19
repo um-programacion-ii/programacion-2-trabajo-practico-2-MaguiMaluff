@@ -50,14 +50,17 @@ public class GestorRecursos {
 
 
     public RecursoDigital buscarPorNombre(String name) {
-        for (RecursoDigital recurso : recursos) {
-            if (recurso.getNombre().trim().equalsIgnoreCase(name.trim())){
-                recurso.showInfo();
-                return recurso;
-            }
-        }
-        System.out.println("Recurso no encontrado");
-        return null;
+        return recursos.stream()
+                .filter(recurso -> recurso.getNombre().equalsIgnoreCase(name.trim()))
+                .findFirst()
+                .map(recurso -> {
+                    recurso.showInfo();
+                    return recurso;
+                })
+                .orElseGet(() -> {
+                    System.out.println("Recurso no encontrado");
+                    return null;
+                });
     }
 
     public List<RecursoDigital> buscarPorTipo(Class<?> tipo) {
@@ -79,6 +82,13 @@ public class GestorRecursos {
 
         return filtrados;
     }
+
+    public void ordenarPorNombre() {
+        recursos.sort((r1, r2) -> r1.getNombre().compareToIgnoreCase(r2.getNombre()));
+        System.out.println("Recursos ordenados por nombre:");
+        listarRecursos();
+    }
+
 
 
 
