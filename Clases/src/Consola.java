@@ -102,6 +102,8 @@ public class Consola {
                     \
                     6. Filtrar por Tipo
                     \
+                    7. Filtrar Recursos Ordenados
+                    \
                     0. Menu Anterior
                     """);
             try {
@@ -134,9 +136,12 @@ public class Consola {
 
                     if (recurso instanceof Prestable prestable && usuario != null) {
                         prestable.prestar(usuario);
+                    } else if (recurso == null) {
+                        System.out.println("Recurso no encontrado.");
                     } else {
                         System.out.println("No se puede prestar.");
                     }
+
                     break;
                 case 5:
                     System.out.println("Nombre del recurso: ");
@@ -148,8 +153,10 @@ public class Consola {
 
                     if (recursoRenovable instanceof Renovable renovable) {
                         renovable.renovar(usuario5);
+                    } else if (recursoRenovable == null) {
+                        System.out.println("Recurso no encontrado.");
                     } else {
-                        System.out.println("El recurso no permite renovación.");
+                        System.out.println("No se puede prestar.");
                     }
                     break;
                 case 6:
@@ -169,6 +176,9 @@ public class Consola {
                         default:
                             System.out.println("Tipo no válido");
                     }
+                case 7:
+                    myGestorRecursos.ordenarPorNombre();
+                    break;
                 case 0:
                     break;
                 default:
