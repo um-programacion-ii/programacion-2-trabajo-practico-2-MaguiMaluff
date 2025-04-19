@@ -2,6 +2,7 @@ package Modelos;
 
 import Interfaces.Prestable;
 import Interfaces.Renovable;
+import Recursos.CategoriaRecurso;
 import Recursos.EstadoRecurso;
 import Recursos.RecursoDigital;
 import Servicios.ServicioNotificacionesEmail;
@@ -14,9 +15,10 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
     private Usuario tiene = null;
     private static ServicioNotificacionesEmail servicioNotificaciones = new ServicioNotificacionesEmail();
 
-    public Libro(EstadoRecurso estate, String autor, String name) {
-        super(estate, name);
+    public Libro(EstadoRecurso estate, String autor, String name, CategoriaRecurso categoria) {
+        super(estate, name, categoria);
         this.autor = autor;
+
     }
 
     public void showInfo() {

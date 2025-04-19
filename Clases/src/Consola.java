@@ -4,6 +4,7 @@ import Gestion.GestorRecursos;
 import Gestion.GestorUsuarios;
 import Interfaces.Prestable;
 import Interfaces.Renovable;
+import Recursos.CategoriaRecurso;
 import Recursos.EstadoRecurso;
 import Modelos.Usuario;
 import Recursos.RecursoDigital;
@@ -104,6 +105,8 @@ public class Consola {
                     \
                     7. Filtrar Recursos Ordenados
                     \
+                    8. Buscar por Categoria
+                    \
                     0. Menu Anterior
                     """);
             try {
@@ -179,6 +182,13 @@ public class Consola {
                 case 7:
                     myGestorRecursos.ordenarPorNombre();
                     break;
+                case 8:
+                    myGestorRecursos.mostrarCategoriasDisponibles();
+                    System.out.println("Ingrese categoría:");
+                    String cat = myObj.nextLine().trim().toUpperCase();
+                    CategoriaRecurso categoria = CategoriaRecurso.valueOf(cat);
+                    myGestorRecursos.buscarPorCategoria(categoria);
+                    break;
                 case 0:
                     break;
                 default:
@@ -212,8 +222,11 @@ public class Consola {
                 String name = myObj.nextLine();
                 System.out.println("Autor: ");
                 String autor = myObj.nextLine();
+                System.out.println("Categoria (EDUCACION, ENTRETENIMIENTO, TECNOLOGIA, CIENCIA, HISTORIA, OTROS):");
+                String cat = myObj.nextLine().trim().toUpperCase();
+                CategoriaRecurso categoria = CategoriaRecurso.valueOf(cat);
 
-                myGestorRecursos.agregarLibro(EstadoRecurso.DISPONIBLE, autor, name);
+                myGestorRecursos.agregarLibro(EstadoRecurso.DISPONIBLE, autor, name, categoria);
                 break;
             case 2:
                 System.out.println("Nombre: ");
@@ -221,9 +234,12 @@ public class Consola {
                 System.out.println("Marca: ");
                 String marca = myObj.nextLine();
                 System.out.println("Issue: ");
-                Integer issue = Integer.valueOf(myObj.nextLine());;
+                Integer issue = Integer.valueOf(myObj.nextLine());
+                System.out.println("Categoria (EDUCACION, ENTRETENIMIENTO, TECNOLOGIA, CIENCIA, HISTORIA, OTROS):");
+                String cat_2 = myObj.nextLine().trim().toUpperCase();
+                CategoriaRecurso categoria_2 = CategoriaRecurso.valueOf(cat_2);
 
-                myGestorRecursos.agregarRevista(EstadoRecurso.DISPONIBLE, marca, issue, name_2);
+                myGestorRecursos.agregarRevista(EstadoRecurso.DISPONIBLE, marca, issue, name_2, categoria_2 );
                 break;
             case 3:
                 System.out.println("Nombre: ");
@@ -232,8 +248,11 @@ public class Consola {
                 String autor_3 = myObj.nextLine();
                 System.out.println("Lector: ");
                 String lector = myObj.nextLine();
+                System.out.println("Categoria (EDUCACION, ENTRETENIMIENTO, TECNOLOGIA, CIENCIA, HISTORIA, OTROS):");
+                String cat_3 = myObj.nextLine().trim().toUpperCase();
+                CategoriaRecurso categoria_3 = CategoriaRecurso.valueOf(cat_3);
 
-                myGestorRecursos.agregarAudioLibro(EstadoRecurso.DISPONIBLE, autor_3, lector, name_3);
+                myGestorRecursos.agregarAudioLibro(EstadoRecurso.DISPONIBLE, autor_3, lector, name_3, categoria_3);
                 break;
             case 0:
                 break;
