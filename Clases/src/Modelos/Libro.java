@@ -72,6 +72,11 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
 
     }
 
+    public void resetearFechaEstado(){
+        this.setEstado(EstadoRecurso.DISPONIBLE);
+        this.setFechaDevolucion(null);
+    }
+
     public void setFechaDevolucion(LocalDateTime fechaDevolucion) {
         this.fechaDevolucion = fechaDevolucion;
     }
@@ -91,4 +96,5 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
     public void setTiene(Usuario tiene) {
         this.tiene = tiene;
     }
+
 }
