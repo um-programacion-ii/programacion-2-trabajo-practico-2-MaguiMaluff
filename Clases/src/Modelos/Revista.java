@@ -50,6 +50,11 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
         }
     }
 
+    public void resetearFechaEstado(){
+        this.setEstado(EstadoRecurso.DISPONIBLE);
+        this.setFechaDevolucion(null);
+    }
+
     public void renovar(Usuario usuario) {
         if (getEstado() == EstadoRecurso.PRESTADO && this.tiene.equals(usuario)) {
             this.fechaDevolucion = fechaDevolucion.plusDays(7);
@@ -88,7 +93,7 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
         return fechaDevolucion;
     }
 
-    public void setFecha(LocalDateTime fecha) {
+    public void setFechaDevolucion(LocalDateTime fecha) {
         this.fechaDevolucion = fecha;
     }
 

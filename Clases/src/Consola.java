@@ -4,6 +4,7 @@ import Excepciones.DatosErroneosException;
 import Excepciones.RecursoNoDisponibleException;
 import Excepciones.RecursoNoEncontradoException;
 import Excepciones.UsuarioNoEncontradoException;
+import Gestion.GestorPrestamos;
 import Gestion.GestorRecursos;
 import Gestion.GestorUsuarios;
 import Interfaces.Prestable;
@@ -17,6 +18,7 @@ public class Consola {
     Scanner myObj = new Scanner(System.in);
     GestorUsuarios myGestorUsuarios = new GestorUsuarios();
     GestorRecursos myGestorRecursos = new GestorRecursos();
+    GestorPrestamos myGestorPrestamos = new GestorPrestamos();
 
     public void menu() {
         int choice = -1;
@@ -25,6 +27,8 @@ public class Consola {
                     1. Gestion Usuarios
                     \
                     2. Gestion Recursos
+                    \
+                    3. Gestion Prestamos
                     \
                     0. Salir
                     """);
@@ -39,6 +43,9 @@ public class Consola {
                     break;
                 case 2:
                     gestionRecursos();
+                    break;
+                case 3:
+                    gestionPrestamos();
                     break;
                 case 0:
                     System.out.println("Adios");
@@ -65,7 +72,7 @@ public class Consola {
             }
             switch (choice) {
                 case 1:
-                    try{
+                    try {
                         System.out.println("Nombre: ");
                         String name = myObj.nextLine();
                         System.out.println("Mail: ");
@@ -115,15 +122,11 @@ public class Consola {
                     \
                     3. Listar Todos los Recursos
                     \
-                    4. Solicitar Prestamo
+                    4. Filtrar por Tipo
                     \
-                    5. Renovar Prestamo
+                    5. Filtrar Recursos Ordenados
                     \
-                    6. Filtrar por Tipo
-                    \
-                    7. Filtrar Recursos Ordenados
-                    \
-                    8. Buscar por Categoria
+                    6. Buscar por Categoria
                     \
                     0. Menu Anterior
                     """);
@@ -150,55 +153,8 @@ public class Consola {
                 case 3:
                     myGestorRecursos.listarRecursos();
                     break;
+
                 case 4:
-                    System.out.println("Nombre del recurso: ");
-                    String name_5 = myObj.nextLine();
-                    System.out.println("Nombre del usuario: ");
-                    String name_4 = myObj.nextLine();
-                    RecursoDigital recurso = null;
-                    Usuario usuario = null;
-                    try {
-                        recurso = myGestorRecursos.buscarPorNombre(name_5);
-                        usuario = myGestorUsuarios.searchUserName(name_4);
-                    } catch (UsuarioNoEncontradoException | RecursoNoEncontradoException e) {
-                        System.out.println(e.getMessage());
-                    }
-
-                    if (recurso instanceof Prestable prestable && usuario != null) {
-                        try {
-                            prestable.prestar(usuario);
-                            System.out.println("Recurso prestado exitosamente.");
-                        } catch (RecursoNoDisponibleException | DatosErroneosException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    } else if (recurso == null) {
-                        System.out.println("Recurso no encontrado.");
-                    } else {
-                        System.out.println("No se puede prestar.");
-                    }
-
-                    break;
-                case 5:
-                    System.out.println("Nombre del recurso: ");
-                    String recursoNombre = myObj.nextLine();
-                    System.out.println("Nombre del usuario: ");
-                    String usuario_5 = myObj.nextLine();
-                    RecursoDigital recursoRenovable = myGestorRecursos.buscarPorNombre(recursoNombre);
-                    Usuario usuario5 = myGestorUsuarios.searchUserName(usuario_5);
-
-                    if (recursoRenovable instanceof Renovable renovable) {
-                        try {
-                            renovable.renovar(usuario5);
-                        } catch (RecursoNoDisponibleException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    } else if (recursoRenovable == null) {
-                        System.out.println("Recurso no encontrado.");
-                    } else {
-                        System.out.println("No se puede prestar.");
-                    }
-                    break;
-                case 6:
                     System.out.println("Tipo de recurso (Libro, Revista, AudioLibro): ");
                     String tipo = "";
                     try {
@@ -224,10 +180,10 @@ public class Consola {
                     } catch (RecursoNoDisponibleException e) {
                         System.out.println(e.getMessage());
                     }
-                case 7:
+                case 5:
                     myGestorRecursos.ordenarPorNombre();
                     break;
-                case 8:
+                case 6:
                     myGestorRecursos.mostrarCategoriasDisponibles();
                     System.out.println("Ingrese categoría:");
                     String cat = myObj.nextLine().trim().toUpperCase();
@@ -313,12 +269,92 @@ public class Consola {
                         break;
                 }
 
-            } catch (DatosErroneosException  e) {
+            } catch (DatosErroneosException e) {
                 System.out.println(e.getMessage());
             } catch (IllegalArgumentException e) {
                 System.out.println("La categoría ingresada no es válida.");
             }
-        }while (choice != 0);
+        } while (choice != 0);
+    }
+
+    public void gestionPrestamos() {
+        int choice = -1;
+        do {
+            System.out.println("""
+                    1. Solicitar Prestamo
+                    \
+                    2. Renovar Prestamo
+                    \
+                    0. Salir
+                    """);
+            try {
+                choice = Integer.parseInt(myObj.nextLine());
+            } catch (Exception e) {
+                System.out.println("Opcion no disponible");
+            }
+            switch (choice) {
+                case 1:
+                    System.out.println("Nombre del recurso: ");
+                    String name_5 = myObj.nextLine();
+                    System.out.println("Nombre del usuario: ");
+                    String name_4 = myObj.nextLine();
+                    RecursoDigital recurso = null;
+                    Usuario usuario = null;
+                    try {
+                        recurso = myGestorRecursos.buscarPorNombre(name_5);
+                        usuario = myGestorUsuarios.searchUserName(name_4);
+                    } catch (UsuarioNoEncontradoException | RecursoNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    }
+
+                    if (recurso instanceof Prestable prestable && usuario != null) {
+                        try {
+                            myGestorPrestamos.registrarPrestamo(usuario, ((Prestable) recurso));
+                            System.out.println("Recurso prestado exitosamente.");
+                        } catch (RecursoNoDisponibleException | UsuarioNoEncontradoException | DatosErroneosException | RecursoNoEncontradoException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    } else if (recurso == null) {
+                        System.out.println("Recurso no encontrado.");
+                    } else {
+                        System.out.println("No se puede prestar.");
+                    }
+                    break;
+
+                case 2:
+                    System.out.println("Nombre del recurso: ");
+                    String recursoNombre = myObj.nextLine();
+                    System.out.println("Nombre del usuario: ");
+                    String usuario_5 = myObj.nextLine();
+                    RecursoDigital recursoRenovable = null;
+                    Usuario usuario5 = null;
+
+                    try {
+                        recursoRenovable = myGestorRecursos.buscarPorNombre(recursoNombre);
+                        usuario5 = myGestorUsuarios.searchUserName(usuario_5);
+                    } catch (UsuarioNoEncontradoException | RecursoNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    }
+
+                    if (recursoRenovable instanceof Renovable renovable) {
+                        try {
+                            renovable.renovar(usuario5);
+                        } catch (RecursoNoDisponibleException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    } else if (recursoRenovable == null) {
+                        System.out.println("Recurso no encontrado.");
+                    } else {
+                        System.out.println("No se puede prestar.");
+                    }
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opcion Invalida");
+                    break;
+            }
+        } while (choice != 0);
     }
 }
 
