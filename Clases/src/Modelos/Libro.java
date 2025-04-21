@@ -1,5 +1,6 @@
 package Modelos;
 
+import Excepciones.RecursoNoDisponibleException;
 import Interfaces.Prestable;
 import Interfaces.Renovable;
 import Recursos.CategoriaRecurso;
@@ -39,7 +40,7 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
             servicioNotificaciones.enviarNotificacion("El recurso " + this.getNombre() + " ha sido renovado." +
                         '\n' + " Nueva fecha de devolución: " + fechaDevolucion);
         } else {
-            System.out.println("El libro no está prestado, no se puede renovar.");
+            throw new RecursoNoDisponibleException("El libro no está prestado, no se puede renovar.");
         }
     }
 
@@ -58,7 +59,7 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
     }
 
     public void prestar(Usuario usuario){
-        if(this.getEstado().equals(EstadoRecurso.DISPONIBLE)){
+        if(this.estaDisponible()){
             this.setEstado(EstadoRecurso.PRESTADO);
             this.tiene = usuario;
             this.fechaDevolucion = LocalDateTime.now().plusDays(14);
@@ -66,7 +67,7 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
                     " ha sido prestado" + '\n' + "Fecha de devolución: " + fechaDevolucion);
             System.out.println("Prestamo exitoso");
         }else{
-            System.out.println("Libro no Disponible");
+            throw new RecursoNoDisponibleException("El libro no esta disponible");
         }
 
     }

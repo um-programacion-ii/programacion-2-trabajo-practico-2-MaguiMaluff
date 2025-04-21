@@ -1,5 +1,6 @@
 package Modelos;
 
+import Excepciones.RecursoNoDisponibleException;
 import Interfaces.Prestable;
 import Interfaces.Renovable;
 import Recursos.CategoriaRecurso;
@@ -45,7 +46,7 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
                     " ha sido prestado" + '\n' + "Fecha de devolución: " + fechaDevolucion);
             System.out.println("Prestamo exitoso");
         }else{
-            System.out.println("Revista no Disponible");
+            throw new RecursoNoDisponibleException("La revista no esta disponible.");
         }
     }
 
@@ -55,7 +56,7 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
             servicioNotificaciones.enviarNotificacion("El recurso " + this.getNombre() + " ha sido renovado." +
                     '\n' + " Nueva fecha de devolución: " + fechaDevolucion);
         } else {
-            System.out.println("El libro no está prestado, no se puede renovar.");
+            throw new RecursoNoDisponibleException("La revista no está prestado, no se puede renovar.");
         }
     }
 

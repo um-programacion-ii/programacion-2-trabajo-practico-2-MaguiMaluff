@@ -1,4 +1,6 @@
 package Gestion;
+import Excepciones.DatosErroneosException;
+import Excepciones.UsuarioNoEncontradoException;
 import Modelos.Usuario;
 
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ public class GestorUsuarios {
 
     public void newUser(String name, String email){
         if (name == null || email == null || !email.contains("@")){
-            System.out.println("Ingrese Los datos correctamente");
+            throw new DatosErroneosException("Ingrese los datos correctamente");
         }else{
 
             Usuario new_user = new Usuario(name, email);
@@ -31,8 +33,7 @@ public class GestorUsuarios {
                 return user;
             }
         }
-        System.out.println("Usuario no encontrado");
-        return null;
+        throw new UsuarioNoEncontradoException("El usuario no fue encontrado");
     }
 
     public Usuario searchUserEmail(String email){
@@ -43,8 +44,7 @@ public class GestorUsuarios {
                 return user;
             }
         }
-        System.out.println("Usuario no encontrado");
-        return null;
+        throw new UsuarioNoEncontradoException("El usuario no fue encontrado");
     }
 
     public void showInfo(Usuario user){

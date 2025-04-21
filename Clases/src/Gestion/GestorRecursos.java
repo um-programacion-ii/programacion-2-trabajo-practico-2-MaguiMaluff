@@ -1,5 +1,7 @@
 package Gestion;
 import Excepciones.DatosErroneosException;
+import Excepciones.RecursoNoDisponibleException;
+import Excepciones.RecursoNoEncontradoException;
 import Modelos.AudioLibro;
 import Recursos.EstadoRecurso;
 import Modelos.Libro;
@@ -14,7 +16,7 @@ public class GestorRecursos {
 
     public void agregarLibro(EstadoRecurso estate, String nombre, String autor, CategoriaRecurso categoria) {
         if (nombre == null || autor == null ){
-            System.out.println("Ingrese los datos correctamente");
+            throw new DatosErroneosException("Ingrese los datos correctamente");
         }
         Libro libro = new Libro(estate, autor, nombre, categoria);
         recursos.add(libro);
@@ -57,10 +59,7 @@ public class GestorRecursos {
                     recurso.showInfo();
                     return recurso;
                 })
-                .orElseGet(() -> {
-                    System.out.println("Recurso no encontrado");
-                    return null;
-                });
+                .orElseThrow(() -> new RecursoNoEncontradoException("El recurso no fue encontrado"));
     }
 
     public List<RecursoDigital> buscarPorTipo(Class<?> tipo) {
@@ -73,7 +72,7 @@ public class GestorRecursos {
         }
 
         if (filtrados.isEmpty()) {
-            System.out.println("No se encontraron recursos del tipo: " + tipo.getSimpleName());
+            throw new RecursoNoEncontradoException("No se encontraron recursos del tipo: " + tipo.getSimpleName());
         } else {
             for (RecursoDigital recurso : filtrados) {
                 recurso.showInfo();
@@ -95,7 +94,7 @@ public class GestorRecursos {
                 .toList();
 
         if (filtrados.isEmpty()) {
-            System.out.println("No se encontraron recursos con esa categoría");
+            throw new RecursoNoEncontradoException("No se encontraron recursos con la categoria");
         } else {
             for (RecursoDigital recurso : filtrados) {
                 recurso.showInfo();
@@ -106,7 +105,7 @@ public class GestorRecursos {
 
     public void listarRecursos() {
         if (recursos.isEmpty()) {
-            System.out.println("No hay recursos cargados");
+            throw new RecursoNoEncontradoException("No hay recursos cargados");
         } else {
             for (RecursoDigital recurso : recursos) {
                 recurso.showInfo();
