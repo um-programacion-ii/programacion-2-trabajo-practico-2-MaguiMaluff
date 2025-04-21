@@ -1,5 +1,9 @@
 import java.util.Scanner;
 
+import Excepciones.DatosErroneosException;
+import Excepciones.RecursoNoDisponibleException;
+import Excepciones.RecursoNoEncontradoException;
+import Excepciones.UsuarioNoEncontradoException;
 import Gestion.GestorRecursos;
 import Gestion.GestorUsuarios;
 import Interfaces.Prestable;
@@ -14,22 +18,22 @@ public class Consola {
     GestorUsuarios myGestorUsuarios = new GestorUsuarios();
     GestorRecursos myGestorRecursos = new GestorRecursos();
 
-    public void menu(){
+    public void menu() {
         int choice = -1;
-        do{
-        System.out.println("""
-                1. Gestion Usuarios
-                \
-                2. Gestion Recursos
-                \
-                0. Salir
-                """);
+        do {
+            System.out.println("""
+                    1. Gestion Usuarios
+                    \
+                    2. Gestion Recursos
+                    \
+                    0. Salir
+                    """);
             try {
                 choice = Integer.parseInt(myObj.nextLine());
-            }catch (Exception e){
-                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Opcion no disponible");
             }
-            switch (choice){
+            switch (choice) {
                 case 1:
                     gestionUsuario();
                     break;
@@ -40,44 +44,57 @@ public class Consola {
                     System.out.println("Adios");
                     break;
             }
-            }while(choice != 0);
+        } while (choice != 0);
     }
+
     public void gestionUsuario() {
         int choice = -1;
-        do{
-        System.out.println("""
-                1. Agregar Usuarios
-                \
-                2. Buscar Usuario por Nombre
-                \
-                3. Buscar Usuario por Email
-                \
-                0. Menu Anterior""");
-        try {
-            choice = Integer.parseInt(myObj.nextLine());
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
+        do {
+            System.out.println("""
+                    1. Agregar Usuarios
+                    \
+                    2. Buscar Usuario por Nombre
+                    \
+                    3. Buscar Usuario por Email
+                    \
+                    0. Menu Anterior""");
+            try {
+                choice = Integer.parseInt(myObj.nextLine());
+            } catch (Exception e) {
+                System.out.println("Opcion no disponible");
+            }
             switch (choice) {
                 case 1:
-                    System.out.println("Nombre: ");
-                    String name = myObj.nextLine();
-                    System.out.println("Mail: ");
-                    String mail = myObj.nextLine();
-                    myGestorUsuarios.newUser(name, mail);
+                    try{
+                        System.out.println("Nombre: ");
+                        String name = myObj.nextLine();
+                        System.out.println("Mail: ");
+                        String mail = myObj.nextLine();
+                        myGestorUsuarios.newUser(name, mail);
+                    } catch (DatosErroneosException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
 
                 case 2:
-                        System.out.println("Nombre: ");
-                        String name_2 = myObj.nextLine();
+                    System.out.println("Nombre: ");
+                    String name_2 = myObj.nextLine();
+                    try {
                         myGestorUsuarios.searchUserName(name_2);
-                        break;
+                    } catch (UsuarioNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
 
                 case 3:
-                        System.out.println("Email: ");
-                        String email = myObj.nextLine();
+                    System.out.println("Email: ");
+                    String email = myObj.nextLine();
+                    try {
                         myGestorUsuarios.searchUserEmail(email);
-                        break;
+                    } catch (UsuarioNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
 
                 case 0:
                     break;
@@ -85,9 +102,10 @@ public class Consola {
                     System.out.println("Opcion Invalida");
                     break;
             }
-        }while(choice != 0);
+        } while (choice != 0);
     }
-    public void gestionRecursos(){
+
+    public void gestionRecursos() {
         int choice = -1;
         do {
             System.out.println("""
@@ -111,8 +129,8 @@ public class Consola {
                     """);
             try {
                 choice = Integer.parseInt(myObj.nextLine());
-            }catch (Exception e){
-                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Opcion no disponible");
             }
             switch (choice) {
                 case 1:
@@ -122,7 +140,11 @@ public class Consola {
                 case 2:
                     System.out.println("Nombre del recurso: ");
                     String buscarNombre = myObj.nextLine().trim();
-                    myGestorRecursos.buscarPorNombre(buscarNombre);
+                    try {
+                        myGestorRecursos.buscarPorNombre(buscarNombre);
+                    } catch (RecursoNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
 
                 case 3:
@@ -133,12 +155,22 @@ public class Consola {
                     String name_5 = myObj.nextLine();
                     System.out.println("Nombre del usuario: ");
                     String name_4 = myObj.nextLine();
-
-                    RecursoDigital recurso = myGestorRecursos.buscarPorNombre(name_5);
-                    Usuario usuario = myGestorUsuarios.searchUserName(name_4);
+                    RecursoDigital recurso = null;
+                    Usuario usuario = null;
+                    try {
+                        recurso = myGestorRecursos.buscarPorNombre(name_5);
+                        usuario = myGestorUsuarios.searchUserName(name_4);
+                    } catch (UsuarioNoEncontradoException | RecursoNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    }
 
                     if (recurso instanceof Prestable prestable && usuario != null) {
-                        prestable.prestar(usuario);
+                        try {
+                            prestable.prestar(usuario);
+                            System.out.println("Recurso prestado exitosamente.");
+                        } catch (RecursoNoDisponibleException | DatosErroneosException e) {
+                            System.out.println(e.getMessage());
+                        }
                     } else if (recurso == null) {
                         System.out.println("Recurso no encontrado.");
                     } else {
@@ -155,7 +187,11 @@ public class Consola {
                     Usuario usuario5 = myGestorUsuarios.searchUserName(usuario_5);
 
                     if (recursoRenovable instanceof Renovable renovable) {
-                        renovable.renovar(usuario5);
+                        try {
+                            renovable.renovar(usuario5);
+                        } catch (RecursoNoDisponibleException e) {
+                            System.out.println(e.getMessage());
+                        }
                     } else if (recursoRenovable == null) {
                         System.out.println("Recurso no encontrado.");
                     } else {
@@ -164,20 +200,29 @@ public class Consola {
                     break;
                 case 6:
                     System.out.println("Tipo de recurso (Libro, Revista, AudioLibro): ");
-                    String tipo = myObj.nextLine().trim().toLowerCase();
+                    String tipo = "";
+                    try {
+                        tipo = myObj.nextLine().trim().toLowerCase();
+                    } catch (Exception e) {
+                        System.out.println("Opcion no disponible");
+                    }
 
-                    switch (tipo) {
-                        case "libro":
-                            myGestorRecursos.buscarPorTipo(Modelos.Libro.class);
-                            break;
-                        case "revista":
-                            myGestorRecursos.buscarPorTipo(Modelos.Revista.class);
-                            break;
-                        case "audiolibro":
-                            myGestorRecursos.buscarPorTipo(Modelos.AudioLibro.class);
-                            break;
-                        default:
-                            System.out.println("Tipo no válido");
+                    try {
+                        switch (tipo) {
+                            case "libro":
+                                myGestorRecursos.buscarPorTipo(Modelos.Libro.class);
+                                break;
+                            case "revista":
+                                myGestorRecursos.buscarPorTipo(Modelos.Revista.class);
+                                break;
+                            case "audiolibro":
+                                myGestorRecursos.buscarPorTipo(Modelos.AudioLibro.class);
+                                break;
+                            default:
+                                System.out.println("Tipo no válido");
+                        }
+                    } catch (RecursoNoDisponibleException e) {
+                        System.out.println(e.getMessage());
                     }
                 case 7:
                     myGestorRecursos.ordenarPorNombre();
@@ -186,83 +231,94 @@ public class Consola {
                     myGestorRecursos.mostrarCategoriasDisponibles();
                     System.out.println("Ingrese categoría:");
                     String cat = myObj.nextLine().trim().toUpperCase();
-                    CategoriaRecurso categoria = CategoriaRecurso.valueOf(cat);
-                    myGestorRecursos.buscarPorCategoria(categoria);
+                    try {
+                        CategoriaRecurso categoria = CategoriaRecurso.valueOf(cat);
+                        myGestorRecursos.buscarPorCategoria(categoria);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("La categoría ingresada no es válida.");
+                    } catch (DatosErroneosException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 0:
                     break;
                 default:
                     System.out.println("Opcion Invalida");
             }
-        }while (choice != 0);
+        } while (choice != 0);
 
     }
+
     public void agregarRecurso() {
         int choice = -1;
-        do{
+        do {
 
-        System.out.println("""
-                1. Agregar Libro
-                \
-                2. Agregar Revista
-                \
-                3. Agregar Audiolibre
-                \
-                0. Menu Anterior
-                """);
+            System.out.println("""
+                    1. Agregar Libro
+                    \
+                    2. Agregar Revista
+                    \
+                    3. Agregar Audiolibre
+                    \
+                    0. Menu Anterior
+                    """);
             try {
                 choice = Integer.parseInt(myObj.nextLine());
-            }catch (Exception e){
-                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Opcion no disponible");
             }
+            try {
+                switch (choice) {
+                    case 1:
+                        System.out.println("Nombre: ");
+                        String name = myObj.nextLine();
+                        System.out.println("Autor: ");
+                        String autor = myObj.nextLine();
+                        System.out.println("Categoria (EDUCACION, ENTRETENIMIENTO, TECNOLOGIA, CIENCIA, HISTORIA, OTROS):");
+                        String cat = myObj.nextLine().trim().toUpperCase();
+                        CategoriaRecurso categoria = CategoriaRecurso.valueOf(cat);
 
-        switch (choice) {
-            case 1:
-                System.out.println("Nombre: ");
-                String name = myObj.nextLine();
-                System.out.println("Autor: ");
-                String autor = myObj.nextLine();
-                System.out.println("Categoria (EDUCACION, ENTRETENIMIENTO, TECNOLOGIA, CIENCIA, HISTORIA, OTROS):");
-                String cat = myObj.nextLine().trim().toUpperCase();
-                CategoriaRecurso categoria = CategoriaRecurso.valueOf(cat);
+                        myGestorRecursos.agregarLibro(EstadoRecurso.DISPONIBLE, autor, name, categoria);
+                        break;
+                    case 2:
+                        System.out.println("Nombre: ");
+                        String name_2 = myObj.nextLine();
+                        System.out.println("Marca: ");
+                        String marca = myObj.nextLine();
+                        System.out.println("Issue: ");
+                        Integer issue = Integer.valueOf(myObj.nextLine());
+                        System.out.println("Categoria (EDUCACION, ENTRETENIMIENTO, TECNOLOGIA, CIENCIA, HISTORIA, OTROS):");
+                        String cat_2 = myObj.nextLine().trim().toUpperCase();
+                        CategoriaRecurso categoria_2 = CategoriaRecurso.valueOf(cat_2);
 
-                myGestorRecursos.agregarLibro(EstadoRecurso.DISPONIBLE, autor, name, categoria);
-                break;
-            case 2:
-                System.out.println("Nombre: ");
-                String name_2 = myObj.nextLine();
-                System.out.println("Marca: ");
-                String marca = myObj.nextLine();
-                System.out.println("Issue: ");
-                Integer issue = Integer.valueOf(myObj.nextLine());
-                System.out.println("Categoria (EDUCACION, ENTRETENIMIENTO, TECNOLOGIA, CIENCIA, HISTORIA, OTROS):");
-                String cat_2 = myObj.nextLine().trim().toUpperCase();
-                CategoriaRecurso categoria_2 = CategoriaRecurso.valueOf(cat_2);
+                        myGestorRecursos.agregarRevista(EstadoRecurso.DISPONIBLE, marca, issue, name_2, categoria_2);
+                        break;
+                    case 3:
+                        System.out.println("Nombre: ");
+                        String name_3 = myObj.nextLine();
+                        System.out.println("Autor: ");
+                        String autor_3 = myObj.nextLine();
+                        System.out.println("Lector: ");
+                        String lector = myObj.nextLine();
+                        System.out.println("Categoria (EDUCACION, ENTRETENIMIENTO, TECNOLOGIA, CIENCIA, HISTORIA, OTROS):");
+                        String cat_3 = myObj.nextLine().trim().toUpperCase();
+                        CategoriaRecurso categoria_3 = CategoriaRecurso.valueOf(cat_3);
 
-                myGestorRecursos.agregarRevista(EstadoRecurso.DISPONIBLE, marca, issue, name_2, categoria_2 );
-                break;
-            case 3:
-                System.out.println("Nombre: ");
-                String name_3 = myObj.nextLine();
-                System.out.println("Autor: ");
-                String autor_3 = myObj.nextLine();
-                System.out.println("Lector: ");
-                String lector = myObj.nextLine();
-                System.out.println("Categoria (EDUCACION, ENTRETENIMIENTO, TECNOLOGIA, CIENCIA, HISTORIA, OTROS):");
-                String cat_3 = myObj.nextLine().trim().toUpperCase();
-                CategoriaRecurso categoria_3 = CategoriaRecurso.valueOf(cat_3);
+                        myGestorRecursos.agregarAudioLibro(EstadoRecurso.DISPONIBLE, autor_3, lector, name_3, categoria_3);
+                        break;
+                    case 0:
+                        break;
+                    default:
+                        System.out.println("Opcion Invalida");
+                        break;
+                }
 
-                myGestorRecursos.agregarAudioLibro(EstadoRecurso.DISPONIBLE, autor_3, lector, name_3, categoria_3);
-                break;
-            case 0:
-                break;
-            default:
-                System.out.println("Opcion Invalida");
-                break;
-        }
-        }while(choice != 0);
+            } catch (DatosErroneosException  e) {
+                System.out.println(e.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.println("La categoría ingresada no es válida.");
+            }
+        }while (choice != 0);
     }
 }
-
-
 
