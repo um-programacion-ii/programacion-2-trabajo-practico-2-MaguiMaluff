@@ -1,3 +1,6 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import Excepciones.DatosErroneosException;
@@ -6,6 +9,7 @@ import Excepciones.RecursoNoEncontradoException;
 import Excepciones.UsuarioNoEncontradoException;
 import Gestion.GestorPrestamos;
 import Gestion.GestorRecursos;
+import Gestion.GestorReservas;
 import Gestion.GestorUsuarios;
 import Interfaces.Prestable;
 import Interfaces.Renovable;
@@ -18,7 +22,9 @@ public class Consola {
     Scanner myObj = new Scanner(System.in);
     GestorUsuarios myGestorUsuarios = new GestorUsuarios();
     GestorRecursos myGestorRecursos = new GestorRecursos();
-    GestorPrestamos myGestorPrestamos = new GestorPrestamos();
+    GestorReservas myGestorReservas = new GestorReservas();
+    GestorPrestamos myGestorPrestamos = new GestorPrestamos(myGestorReservas);
+
 
     public void menu() {
         int choice = -1;
@@ -29,6 +35,8 @@ public class Consola {
                     2. Gestion Recursos
                     \
                     3. Gestion Prestamos
+                    \
+                    4. Gestion Reservas
                     \
                     0. Salir
                     """);
@@ -47,6 +55,9 @@ public class Consola {
                 case 3:
                     gestionPrestamos();
                     break;
+                case 4:
+                    gestionReservas();
+                    break;
                 case 0:
                     System.out.println("Adios");
                     break;
@@ -64,7 +75,8 @@ public class Consola {
                     \
                     3. Buscar Usuario por Email
                     \
-                    0. Menu Anterior""");
+                    0. Menú anterior
+                    """);
             try {
                 choice = Integer.parseInt(myObj.nextLine());
             } catch (Exception e) {
@@ -84,11 +96,11 @@ public class Consola {
                     break;
 
                 case 2:
-                    System.out.println("Nombre: ");
-                    String name_2 = myObj.nextLine();
                     try {
-                        myGestorUsuarios.searchUserName(name_2);
+                        myGestorUsuarios.showInfo(this.pedirUsuario());
                     } catch (UsuarioNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -128,7 +140,7 @@ public class Consola {
                     \
                     6. Buscar por Categoria
                     \
-                    0. Menu Anterior
+                    0. Menú anterior
                     """);
             try {
                 choice = Integer.parseInt(myObj.nextLine());
@@ -141,10 +153,9 @@ public class Consola {
                     break;
 
                 case 2:
-                    System.out.println("Nombre del recurso: ");
-                    String buscarNombre = myObj.nextLine().trim();
                     try {
-                        myGestorRecursos.buscarPorNombre(buscarNombre);
+                        RecursoDigital recurso = this.pedirRecurso();
+                        recurso.showInfo();
                     } catch (RecursoNoEncontradoException e) {
                         System.out.println(e.getMessage());
                     }
@@ -216,7 +227,7 @@ public class Consola {
                     \
                     3. Agregar Audiolibre
                     \
-                    0. Menu Anterior
+                    0. Menú anterior
                     """);
             try {
                 choice = Integer.parseInt(myObj.nextLine());
@@ -285,7 +296,13 @@ public class Consola {
                     \
                     2. Renovar Prestamo
                     \
-                    0. Salir
+                    3. Devolver Prestamo
+                    \
+                    4. Buscar Prestamos
+                    \
+                    5. Listar Prestamos
+                    \
+                    0. Menú anterior
                     """);
             try {
                 choice = Integer.parseInt(myObj.nextLine());
@@ -294,15 +311,11 @@ public class Consola {
             }
             switch (choice) {
                 case 1:
-                    System.out.println("Nombre del recurso: ");
-                    String name_5 = myObj.nextLine();
-                    System.out.println("Nombre del usuario: ");
-                    String name_4 = myObj.nextLine();
                     RecursoDigital recurso = null;
                     Usuario usuario = null;
                     try {
-                        recurso = myGestorRecursos.buscarPorNombre(name_5);
-                        usuario = myGestorUsuarios.searchUserName(name_4);
+                        recurso = this.pedirRecurso();
+                        usuario = this.pedirUsuario();
                     } catch (UsuarioNoEncontradoException | RecursoNoEncontradoException e) {
                         System.out.println(e.getMessage());
                     }
@@ -322,31 +335,46 @@ public class Consola {
                     break;
 
                 case 2:
-                    System.out.println("Nombre del recurso: ");
-                    String recursoNombre = myObj.nextLine();
-                    System.out.println("Nombre del usuario: ");
-                    String usuario_5 = myObj.nextLine();
-                    RecursoDigital recursoRenovable = null;
-                    Usuario usuario5 = null;
-
+                    RecursoDigital recurso_2 = null;
+                    Usuario usuario_2 = null;
                     try {
-                        recursoRenovable = myGestorRecursos.buscarPorNombre(recursoNombre);
-                        usuario5 = myGestorUsuarios.searchUserName(usuario_5);
+                        recurso_2 = this.pedirRecurso();
+                        usuario_2 = this.pedirUsuario();
                     } catch (UsuarioNoEncontradoException | RecursoNoEncontradoException e) {
                         System.out.println(e.getMessage());
                     }
 
-                    if (recursoRenovable instanceof Renovable renovable) {
+                    if (recurso_2 instanceof Renovable renovable) {
                         try {
-                            renovable.renovar(usuario5);
+                            renovable.renovar(usuario_2);
                         } catch (RecursoNoDisponibleException e) {
                             System.out.println(e.getMessage());
                         }
-                    } else if (recursoRenovable == null) {
+                    } else if (recurso_2 == null) {
                         System.out.println("Recurso no encontrado.");
                     } else {
                         System.out.println("No se puede prestar.");
                     }
+                    break;
+                case 3:
+                    try{
+                        RecursoDigital recursoDevolver = this.pedirRecurso();
+                        myGestorPrestamos.devolverPrestamo(recursoDevolver);
+                        System.out.println("Recurso devuelto correctamente.");
+                    }catch (RecursoNoEncontradoException | RecursoNoDisponibleException e){
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 4:
+
+                    try {
+                        myGestorPrestamos.buscarPrestamo(this.pedirRecurso());
+                    } catch (RecursoNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 5:
+                    myGestorPrestamos.listarPrestamos();
                     break;
                 case 0:
                     break;
@@ -355,6 +383,85 @@ public class Consola {
                     break;
             }
         } while (choice != 0);
+    }
+
+    public void gestionReservas() {
+        int choice = -1;
+        do {
+            System.out.println("""
+                1. Reservar Recurso
+                \
+                2. Ver Reservas de un Recurso
+                \
+                0. Menú anterior
+                """);
+
+            try {
+                choice = Integer.parseInt(myObj.nextLine());
+            } catch (Exception e) {
+                System.out.println("Opción inválida.");
+            }
+
+            switch (choice) {
+                case 1:
+                    try {
+                        System.out.println("Ingrese la fecha deseada para la reserva (formato: yyyy-MM-dd HH:mm):");
+                        String fechaStr = myObj.nextLine();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                        LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatter);
+
+                        RecursoDigital recurso = this.pedirRecurso();
+                        recurso.showInfo();
+                        Usuario usuario = this.pedirUsuario();
+
+                        if (recurso instanceof Prestable prestable) {
+                            myGestorReservas.reservarRecurso(usuario, prestable, fecha);
+                        } else {
+                            System.out.println("Este recurso no puede ser reservado.");
+                        }
+                    } catch (RecursoNoEncontradoException | UsuarioNoEncontradoException |
+                             RecursoNoDisponibleException | IllegalArgumentException
+                             | DateTimeParseException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+
+                case 2:
+                    try {
+                        RecursoDigital recurso = this.pedirRecurso();
+                        myGestorReservas.mostrarReservas(recurso);
+                    } catch (RecursoNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+
+                case 0:
+                    break;
+
+                default:
+                    System.out.println("Opción inválida.");
+                    break;
+            }
+
+        } while (choice != 0);
+    }
+
+    private RecursoDigital pedirRecurso() throws RecursoNoEncontradoException{
+        System.out.print("Nombre del recurso: ");
+        String nombre = myObj.nextLine();
+        return myGestorRecursos.buscarPorNombre(nombre);
+        }
+
+
+    private Usuario pedirUsuario() {
+        System.out.print("Nombre del usuario: ");
+        String nombre = myObj.nextLine();
+        try {
+            return myGestorUsuarios.searchUserName(nombre);
+        } catch (UsuarioNoEncontradoException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 }
 

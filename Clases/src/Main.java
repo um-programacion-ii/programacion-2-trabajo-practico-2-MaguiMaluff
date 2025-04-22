@@ -14,12 +14,9 @@ public class Main {
         gestor.agregarLibro(EstadoRecurso.DISPONIBLE, "Patrones de Diseño", "Erich Gamma", CategoriaRecurso.EDUCACION);
         gestor.agregarLibro(EstadoRecurso.PRESTADO, "Estructuras de Datos", "Ana Torres", CategoriaRecurso.EDUCACION);
 
-
-        // Agregamos revistas
         gestor.agregarRevista(EstadoRecurso.DISPONIBLE, "Tech Monthly", 42, "Revista Tech", CategoriaRecurso.TECNOLOGIA);
         gestor.agregarRevista(EstadoRecurso.PRESTADO, "Ciencia Hoy", 15, "Revista Ciencia", CategoriaRecurso.EDUCACION);
 
-        // Agregamos audiolibros
         gestor.agregarAudioLibro(EstadoRecurso.DISPONIBLE, "El Principito", "Saint-Exupéry", "Carlos Lector", CategoriaRecurso.ENTRETENIMIENTO);
         gestor.agregarAudioLibro(EstadoRecurso.PRESTADO, "1984", "Orwell", "Lucía Voz", CategoriaRecurso.ENTRETENIMIENTO);
 

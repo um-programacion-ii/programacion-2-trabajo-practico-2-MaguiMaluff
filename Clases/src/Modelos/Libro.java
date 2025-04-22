@@ -46,11 +46,14 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
 
 
     @Override
-    public boolean estaDisponible(){
-        if (this.getEstado() == EstadoRecurso.DISPONIBLE){
+    public boolean estaDisponible() {
+        if (this.getEstado() == EstadoRecurso.DISPONIBLE) {
+            if (this.getFechaDevolucion() != null && LocalDateTime.now().isBefore(this.getFechaDevolucion())) {
+                return false;
+            }
             return true;
-        }else{
-            return false;}
+        }
+        return false;
     }
 
     @Override
@@ -72,6 +75,7 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
 
     }
 
+    @Override
     public void resetearFechaEstado(){
         this.setEstado(EstadoRecurso.DISPONIBLE);
         this.setFechaDevolucion(null);
