@@ -9,6 +9,7 @@ public abstract class RecursoDigital implements IRecursoDigital {
     private String ID;
     private EstadoRecurso estate;
     private CategoriaRecurso categoria;
+    private int vecesPrestado;
 
     public RecursoDigital(EstadoRecurso estate, String name, CategoriaRecurso categoria) {
         this.ID = UUID.randomUUID().toString();
@@ -36,6 +37,13 @@ public abstract class RecursoDigital implements IRecursoDigital {
 
 
     public void showInfo() {
+    }
+
+    public void incrementarPrestamos() {
+        vecesPrestado++;
+    }
+    public int getVecesPrestado() {
+        return vecesPrestado;
     }
 
     public void setEstado(EstadoRecurso estate) {

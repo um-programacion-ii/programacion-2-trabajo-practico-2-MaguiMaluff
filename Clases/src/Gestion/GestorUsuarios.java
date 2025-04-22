@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GestorUsuarios {
     private Map<String, Usuario> users = new HashMap<>();
@@ -50,6 +51,14 @@ public class GestorUsuarios {
     public void showInfo(Usuario user){
         System.out.println("Name: " + user.getName() + '\n'+ "Email: " + user.getEmail() + '\n');
     }
+
+    public List<Usuario> obtenerUsuariosMasActivos() {
+        return users.values().stream()
+                .sorted((u1, u2) -> Integer.compare(u2.getPrestamosRealizados(), u1.getPrestamosRealizados()))
+                .limit(5)
+                .collect(Collectors.toList());
+    }
+
 }
 
 

@@ -26,7 +26,7 @@ public class Consola {
     GestorPrestamos myGestorPrestamos = new GestorPrestamos(myGestorReservas);
 
 
-    public void menu() {
+    public boolean menu() {
         int choice = -1;
         do {
             System.out.println("""
@@ -37,6 +37,8 @@ public class Consola {
                     3. Gestion Prestamos
                     \
                     4. Gestion Reservas
+                    \
+                    5. Mostrar Reportes
                     \
                     0. Salir
                     """);
@@ -58,11 +60,15 @@ public class Consola {
                 case 4:
                     gestionReservas();
                     break;
+                case 5:
+                    mostrarReporte();
+                    break;
                 case 0:
                     System.out.println("Adios");
-                    break;
+                    return false;
             }
         } while (choice != 0);
+    return true;
     }
 
     public void gestionUsuario() {
@@ -457,5 +463,23 @@ public class Consola {
             return null;
         }
     }
+
+    public void mostrarReporte() {
+        System.out.println("====== Recursos Más Prestados ======");
+        myGestorRecursos.obtenerRecursosMasPrestados().forEach(r ->
+                System.out.println(r.getNombre() + " - Prestado " + (r).getVecesPrestado() + " veces")
+        );
+
+        System.out.println("\n====== Usuarios Más Activos ======");
+        myGestorUsuarios.obtenerUsuariosMasActivos().forEach(u ->
+                System.out.println(u.getName() + " - " + u.getPrestamosRealizados() + " préstamos")
+        );
+
+        System.out.println("\n====== Estadísticas por Categoría ======");
+        myGestorRecursos.estadisticasPorCategoria().forEach((categoria, totalPrestamos) ->
+                System.out.println(categoria + ": " + totalPrestamos + " préstamos")
+        );
+    }
+
 }
 

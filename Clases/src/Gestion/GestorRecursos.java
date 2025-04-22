@@ -2,6 +2,7 @@ package Gestion;
 import Excepciones.DatosErroneosException;
 import Excepciones.RecursoNoDisponibleException;
 import Excepciones.RecursoNoEncontradoException;
+import Interfaces.Prestable;
 import Modelos.AudioLibro;
 import Recursos.EstadoRecurso;
 import Modelos.Libro;
@@ -9,6 +10,8 @@ import Modelos.Revista;
 import Recursos.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GestorRecursos {
     private List<RecursoDigital> recursos = new ArrayList<>();
@@ -113,6 +116,23 @@ public class GestorRecursos {
         for (CategoriaRecurso categoria : CategoriaRecurso.values()){
             System.out.println(categoria);
         }
+    }
+
+    public List<RecursoDigital> obtenerRecursosMasPrestados() {
+        return recursos.stream()
+                .filter(r -> r instanceof Prestable)
+                .sorted((r1, r2) -> Integer.compare((r2).getVecesPrestado(), (r1).getVecesPrestado()))
+                .limit(5)
+                .collect(Collectors.toList());
+    }
+
+    public Map<CategoriaRecurso, Long> estadisticasPorCategoria() {
+        return recursos.stream()
+                .filter(r -> r instanceof Prestable && (r).getVecesPrestado() > 0)
+                .collect(Collectors.groupingBy(
+                        RecursoDigital::getCategoria,
+                        Collectors.summingLong(r -> (r).getVecesPrestado())
+                ));
     }
 
 }

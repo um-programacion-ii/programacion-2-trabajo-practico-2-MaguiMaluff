@@ -84,3 +84,18 @@ La funcion enviarNotificaciones, perteneciente a GestorNotificaciones fue genera
     }
 
 ```
+
+Etapa 4 Issue #14
+
+En gestorRecursos, la función que busca las categorias más usadas fue generada cin IA.
+
+```java
+    public Map<CategoriaRecurso, Long> estadisticasPorCategoria() {
+        return recursos.stream()
+                .filter(r -> r instanceof Prestable && (r).getVecesPrestado() > 0)
+                .collect(Collectors.groupingBy(
+                        RecursoDigital::getCategoria,
+                        Collectors.summingLong(r -> (r).getVecesPrestado())
+                ));
+    }
+```

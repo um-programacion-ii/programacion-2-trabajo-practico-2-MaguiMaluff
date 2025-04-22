@@ -6,6 +6,14 @@ public class Usuario {
     private String ID;
     private String name;
     private String email;
+    private int actividadesRealizadas;
+
+    public void incrementarPrestamos() {
+        actividadesRealizadas++;
+    }
+    public int getPrestamosRealizados() {
+        return actividadesRealizadas;
+    }
 
     public String  getID() {
         return ID;
