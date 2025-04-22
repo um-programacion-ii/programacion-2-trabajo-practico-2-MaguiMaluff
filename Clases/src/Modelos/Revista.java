@@ -15,7 +15,6 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
     private Integer issue;
     private LocalDateTime fechaDevolucion = null;
     private Usuario tiene = null;
-    private static ServicioNotificacionesSMS servicioNotificaciones = new ServicioNotificacionesSMS();
 
     public Revista(EstadoRecurso estate, String marca, Integer issue, String name, CategoriaRecurso categoria) {
         super(estate, name, categoria);
@@ -37,7 +36,7 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
         }
     }
 
-    public void prestar(Usuario usuario){
+    public synchronized void prestar(Usuario usuario){
         if(this.getEstado().equals(EstadoRecurso.DISPONIBLE)){
             this.setEstado(EstadoRecurso.PRESTADO);
             this.tiene = usuario;
@@ -48,24 +47,22 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
     }
 
     @Override
-    public void resetearFechaEstado(){
+    public synchronized void resetearFechaEstado(){
         this.setEstado(EstadoRecurso.DISPONIBLE);
         this.setFechaDevolucion(null);
     }
 
     @Override
-    public void renovar(Usuario usuario) {
+    public synchronized void renovar(Usuario usuario) {
         if (getEstado() == EstadoRecurso.PRESTADO && this.tiene.equals(usuario)) {
             this.fechaDevolucion = fechaDevolucion.plusDays(7);
-            servicioNotificaciones.enviar("El recurso " + this.getNombre() + " ha sido renovado." +
-                    '\n' + " Nueva fecha de devolución: " + fechaDevolucion);
         } else {
             throw new RecursoNoDisponibleException("La revista no está prestado, no se puede renovar.");
         }
     }
 
     @Override
-    public boolean estaDisponible(){
+    public synchronized boolean estaDisponible(){
         if(this.getEstado() == EstadoRecurso.DISPONIBLE){
             return true;
         }else{

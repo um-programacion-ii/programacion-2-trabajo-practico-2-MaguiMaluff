@@ -19,6 +19,7 @@ import Servicios.ServicioNotificacionesSMS;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class GestorPrestamos {
@@ -37,22 +38,25 @@ public class GestorPrestamos {
             throws RecursoNoDisponibleException, UsuarioNoEncontradoException,
             DatosErroneosException, RecursoNoEncontradoException {
 
+        System.out.println("Verificando si esta disponible... ");
         if (!recurso.estaDisponible()) {
             throw new RecursoNoDisponibleException("El recurso no está disponible para préstamo.");
         }
-
+        System.out.println("Analizando reservas del recurso... ");
         PriorityBlockingQueue<Reservas> colaReservas = gestorReservas.getReservas().get(recurso);
 
         if (colaReservas != null && !colaReservas.isEmpty()) {
             Reservas siguiente = colaReservas.peek();
-
+            System.out.println("Analizando el usuario... ");
             if (!siguiente.getUsuario().equals(usuario)) {
+                System.out.println("Verificando fechas... ");
                 LocalDateTime fechaReserva = siguiente.getFechaReserva();
                 if (fechaReserva.isBefore(LocalDateTime.now().plusDays(14))) {
                     throw new RecursoNoDisponibleException("Este recurso está reservado por otro usuario durante este período.");
                 }
             }
         }
+        System.out.println("Todo bien, prestamo en curso...");
         recurso.prestar(usuario);
         Prestamos nuevoPrestamo = new Prestamos(usuario, recurso);
         prestamos.add(nuevoPrestamo);
@@ -73,8 +77,10 @@ public class GestorPrestamos {
     }
 
     public void devolverPrestamo(Libro recurso) {
+        System.out.println("Buscando prestamo...");
         for (Prestamos prestamo : prestamos) {
             if (prestamo.getRecurso().equals(recurso)) {
+                System.out.println("Devolviendo recurso... ");
                 prestamos.remove(prestamo);
                 recurso.setEstado(EstadoRecurso.DISPONIBLE);
                 recurso.resetearFechaEstado();
@@ -84,8 +90,10 @@ public class GestorPrestamos {
     }
 
     public void devolverPrestamo(Revista recurso) {
+        System.out.println("Buscando prestamo...");
         for (Prestamos prestamo : prestamos) {
             if (prestamo.getRecurso().equals(recurso)) {
+                System.out.println("Devolviendo recurso... ");
                 prestamos.remove(prestamo);
                 recurso.setEstado(EstadoRecurso.DISPONIBLE);
                 recurso.resetearFechaEstado();
@@ -99,8 +107,6 @@ public class GestorPrestamos {
         myGestorNotificaciones.enviarNotificacion("El recurso " + recurso.getNombre() + " ha sido renovado." +
                 '\n' + " Nueva fecha de devolución: " + recurso.getFechaDevolucion());
     }
-
-
 
     public void listarPrestamos() {
         for (Prestamos prestamo : prestamos) {
