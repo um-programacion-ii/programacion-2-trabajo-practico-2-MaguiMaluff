@@ -4,13 +4,13 @@ import Modelos.Usuario;
 
 import java.time.LocalDateTime;
 
-public class ServicioReservas {
+public class Reservas implements Comparable<Reservas> {
     private Usuario usuario;
     private LocalDateTime fechaReserva;
 
-    public ServicioReservas(Usuario usuario) {
+    public Reservas(Usuario usuario, LocalDateTime fechaReserva) {
         this.usuario = usuario;
-        this.fechaReserva = LocalDateTime.now();
+        this.fechaReserva = fechaReserva;
     }
 
     public Usuario getUsuario() {
@@ -22,6 +22,11 @@ public class ServicioReservas {
     }
     public void showInfo() {
         System.out.println("Reserva de " + usuario.getName() + " el " + fechaReserva);
+    }
+
+    @Override
+    public int compareTo(Reservas otra) {
+        return this.fechaReserva.compareTo(otra.fechaReserva);
     }
 }
 

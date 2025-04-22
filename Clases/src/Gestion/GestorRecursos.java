@@ -55,10 +55,6 @@ public class GestorRecursos {
         return recursos.stream()
                 .filter(recurso -> recurso.getNombre().equalsIgnoreCase(name.trim()))
                 .findFirst()
-                .map(recurso -> {
-                    recurso.showInfo();
-                    return recurso;
-                })
                 .orElseThrow(() -> new RecursoNoEncontradoException("El recurso no fue encontrado"));
     }
 

@@ -5,13 +5,13 @@ import Modelos.Usuario;
 import Recursos.RecursoDigital;
 import java.time.LocalDateTime;
 
-public class ServicioPrestamo {
+public class Prestamos {
     private final Usuario usuario;
     private final Prestable recurso;
     private final LocalDateTime fechaPrestamo;
     private final LocalDateTime fechaDevolucionEstimada;
 
-    public ServicioPrestamo(Usuario usuario, Prestable recurso) {
+    public Prestamos(Usuario usuario, Prestable recurso) {
         this.usuario = usuario;
         this.recurso = recurso;
         this.fechaPrestamo = LocalDateTime.now();

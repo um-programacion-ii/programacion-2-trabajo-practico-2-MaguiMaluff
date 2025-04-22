@@ -50,11 +50,13 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
         }
     }
 
+    @Override
     public void resetearFechaEstado(){
         this.setEstado(EstadoRecurso.DISPONIBLE);
         this.setFechaDevolucion(null);
     }
 
+    @Override
     public void renovar(Usuario usuario) {
         if (getEstado() == EstadoRecurso.PRESTADO && this.tiene.equals(usuario)) {
             this.fechaDevolucion = fechaDevolucion.plusDays(7);
