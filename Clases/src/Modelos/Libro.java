@@ -14,7 +14,6 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
     private String autor;
     private LocalDateTime fechaDevolucion = null;
     private Usuario tiene = null;
-    private static ServicioNotificacionesEmail servicioNotificaciones = new ServicioNotificacionesEmail();
 
     public Libro(EstadoRecurso estate, String autor, String name, CategoriaRecurso categoria) {
         super(estate, name, categoria);
@@ -33,8 +32,11 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
 
         }
     }
-    public void renovar(Usuario usuario) {
+    public synchronized void renovar(Usuario usuario) {
+        System.out.println("Verificando que este prestado...");
+        System.out.println("Verificando usuario... ");
         if (getEstado() == EstadoRecurso.PRESTADO && this.tiene.equals(usuario)) {
+            System.out.println("Renovando!...");
             this.fechaDevolucion = fechaDevolucion.plusDays(7);
         } else {
             throw new RecursoNoDisponibleException("El libro no está prestado, no se puede renovar.");
@@ -43,7 +45,7 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
 
 
     @Override
-    public boolean estaDisponible() {
+    public synchronized boolean estaDisponible() {
         if (this.getEstado() == EstadoRecurso.DISPONIBLE) {
             if (this.getFechaDevolucion() != null && LocalDateTime.now().isBefore(this.getFechaDevolucion())) {
                 return false;
@@ -58,19 +60,24 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
         return fechaDevolucion;
     }
 
-    public void prestar(Usuario usuario){
-        if(this.estaDisponible()){
+    public synchronized void prestar(Usuario usuario) {
+        System.out.println("[Hilo: " + Thread.currentThread().getName() + "] intentando prestar el recurso: " + this.getNombre());
+
+        if (this.estaDisponible()) {
             this.setEstado(EstadoRecurso.PRESTADO);
             this.tiene = usuario;
             this.fechaDevolucion = LocalDateTime.now().plusDays(14);
-        }else{
-            throw new RecursoNoDisponibleException("El libro no esta disponible");
-        }
 
+            System.out.println("[Hilo: " + Thread.currentThread().getName() + "] préstamo exitoso: " + this.getNombre());
+        } else {
+            System.out.println("[Hilo: " + Thread.currentThread().getName() + "] préstamo fallido (no disponible): " + this.getNombre());
+            throw new RecursoNoDisponibleException("El recurso no está disponible.");
+        }
     }
 
+
     @Override
-    public void resetearFechaEstado(){
+    public synchronized void resetearFechaEstado(){
         this.setEstado(EstadoRecurso.DISPONIBLE);
         this.setFechaDevolucion(null);
     }

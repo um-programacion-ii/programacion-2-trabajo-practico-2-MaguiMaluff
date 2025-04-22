@@ -342,7 +342,7 @@ public class Consola {
                         recurso_2 = this.pedirRecurso();
                         usuario_2 = this.pedirUsuario();
                         if (recurso_2 instanceof Renovable renovable) {
-                            renovable.renovar(usuario_2);
+                            myGestorPrestamos.renovarPrestamo(renovable, usuario_2);
                         } else {
                             System.out.println("No se puede renovar este recurso.");
                         }
