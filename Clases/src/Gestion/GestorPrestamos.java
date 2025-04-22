@@ -58,6 +58,8 @@ public class GestorPrestamos {
         }
         System.out.println("Todo bien, prestamo en curso...");
         recurso.prestar(usuario);
+        usuario.incrementarPrestamos();
+        ((RecursoDigital) recurso).incrementarPrestamos();
         Prestamos nuevoPrestamo = new Prestamos(usuario, recurso);
         prestamos.add(nuevoPrestamo);
         myGestorNotificaciones.enviarNotificacion("El recurso " + ((RecursoDigital) recurso).getNombre() +
@@ -106,6 +108,7 @@ public class GestorPrestamos {
         recurso.renovar(usuario);
         myGestorNotificaciones.enviarNotificacion("El recurso " + recurso.getNombre() + " ha sido renovado." +
                 '\n' + " Nueva fecha de devolución: " + recurso.getFechaDevolucion());
+        usuario.incrementarPrestamos();
     }
 
     public void listarPrestamos() {
