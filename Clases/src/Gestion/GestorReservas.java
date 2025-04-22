@@ -7,6 +7,7 @@ import Modelos.Usuario;
 import Recursos.RecursoDigital;
 import Servicios.Reservas;
 import Servicios.ServicioNotificacionesEmail;
+import Servicios.ServicioNotificacionesSMS;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -15,7 +16,14 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 public class GestorReservas {
     private Map<Prestable, PriorityBlockingQueue<Reservas>> reservasPorRecurso = new ConcurrentHashMap<>();
-    private static ServicioNotificacionesEmail notificacionesEmail = new ServicioNotificacionesEmail();
+    private GestorNotificaciones myGestorNotificaciones;
+
+    public GestorReservas() {
+        myGestorNotificaciones = new GestorNotificaciones();
+        myGestorNotificaciones.agregarCanal(new ServicioNotificacionesEmail());
+        myGestorNotificaciones.agregarCanal(new ServicioNotificacionesSMS());
+    }
+
 
     public void reservarRecurso(Usuario usuario, Prestable recurso, LocalDateTime fechaDeseada) {
         if (fechaDeseada.isBefore(LocalDateTime.now())) {
@@ -41,7 +49,7 @@ public class GestorReservas {
 
         Reservas nueva = new Reservas(usuario, fechaDeseada);
         cola.add(nueva);
-        notificacionesEmail.enviarNotificacion("Reserva realizada para el " + fechaDeseada);
+        myGestorNotificaciones.enviarNotificacion("Reserva realizada para el " + fechaDeseada);
         nueva.showInfo();
     }
 

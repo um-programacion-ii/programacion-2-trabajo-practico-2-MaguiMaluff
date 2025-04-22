@@ -1,11 +1,11 @@
 package Servicios;
 
-import Interfaces.ServicioNotificaciones;
+import Interfaces.Notificacion;
 
-public class ServicioNotificacionesSMS implements ServicioNotificaciones {
+public class ServicioNotificacionesSMS implements Notificacion {
 
     @Override
-    public void enviarNotificacion(String mensaje) {
+    public void enviar(String mensaje) {
         System.out.println("Enviando notificación por SMS: " + mensaje);
     }
 }

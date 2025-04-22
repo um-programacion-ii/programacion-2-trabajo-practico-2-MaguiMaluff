@@ -5,6 +5,7 @@ import Excepciones.RecursoNoDisponibleException;
 import Excepciones.RecursoNoEncontradoException;
 import Excepciones.UsuarioNoEncontradoException;
 import Interfaces.Prestable;
+import Interfaces.Renovable;
 import Modelos.Libro;
 import Modelos.Revista;
 import Modelos.Usuario;
@@ -12,6 +13,8 @@ import Recursos.EstadoRecurso;
 import Recursos.RecursoDigital;
 import Servicios.Prestamos;
 import Servicios.Reservas;
+import Servicios.ServicioNotificacionesEmail;
+import Servicios.ServicioNotificacionesSMS;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,9 +24,13 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class GestorPrestamos {
     private List<Prestamos> prestamos = new ArrayList<>();
     private GestorReservas gestorReservas;
+    private GestorNotificaciones myGestorNotificaciones;
 
     public GestorPrestamos(GestorReservas gestorReservas) {
         this.gestorReservas = gestorReservas;
+        myGestorNotificaciones = new GestorNotificaciones();
+        myGestorNotificaciones.agregarCanal(new ServicioNotificacionesEmail());
+        myGestorNotificaciones.agregarCanal(new ServicioNotificacionesSMS());
     }
 
     public void registrarPrestamo(Usuario usuario, Prestable recurso)
@@ -49,6 +56,9 @@ public class GestorPrestamos {
         recurso.prestar(usuario);
         Prestamos nuevoPrestamo = new Prestamos(usuario, recurso);
         prestamos.add(nuevoPrestamo);
+        myGestorNotificaciones.enviarNotificacion("El recurso " + ((RecursoDigital) recurso).getNombre() +
+                " ha sido prestado" + '\n' + "Fecha de devolución: " + recurso.getFechaDevolucion());
+        System.out.println("Prestamo exitoso");
     }
 
 
@@ -83,6 +93,14 @@ public class GestorPrestamos {
             }
         }
     }
+
+    public void renovarPrestamo(Renovable recurso, Usuario usuario) throws RecursoNoDisponibleException{
+        recurso.renovar(usuario);
+        myGestorNotificaciones.enviarNotificacion("El recurso " + recurso.getNombre() + " ha sido renovado." +
+                '\n' + " Nueva fecha de devolución: " + recurso.getFechaDevolucion());
+    }
+
+
 
     public void listarPrestamos() {
         for (Prestamos prestamo : prestamos) {
