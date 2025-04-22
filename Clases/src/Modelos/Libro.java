@@ -60,16 +60,21 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
         return fechaDevolucion;
     }
 
-    public synchronized void prestar(Usuario usuario){
-        if(this.estaDisponible()){
+    public synchronized void prestar(Usuario usuario) {
+        System.out.println("[Hilo: " + Thread.currentThread().getName() + "] intentando prestar el recurso: " + this.getNombre());
+
+        if (this.estaDisponible()) {
             this.setEstado(EstadoRecurso.PRESTADO);
             this.tiene = usuario;
             this.fechaDevolucion = LocalDateTime.now().plusDays(14);
-        }else{
-            throw new RecursoNoDisponibleException("El libro no esta disponible");
-        }
 
+            System.out.println("[Hilo: " + Thread.currentThread().getName() + "] préstamo exitoso: " + this.getNombre());
+        } else {
+            System.out.println("[Hilo: " + Thread.currentThread().getName() + "] préstamo fallido (no disponible): " + this.getNombre());
+            throw new RecursoNoDisponibleException("El recurso no está disponible.");
+        }
     }
+
 
     @Override
     public synchronized void resetearFechaEstado(){
