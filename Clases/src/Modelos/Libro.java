@@ -36,9 +36,6 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
     public void renovar(Usuario usuario) {
         if (getEstado() == EstadoRecurso.PRESTADO && this.tiene.equals(usuario)) {
             this.fechaDevolucion = fechaDevolucion.plusDays(7);
-            System.out.println("Renovación exitosa. Nueva fecha: " + fechaDevolucion);
-            servicioNotificaciones.enviarNotificacion("El recurso " + this.getNombre() + " ha sido renovado." +
-                        '\n' + " Nueva fecha de devolución: " + fechaDevolucion);
         } else {
             throw new RecursoNoDisponibleException("El libro no está prestado, no se puede renovar.");
         }
@@ -66,9 +63,6 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
             this.setEstado(EstadoRecurso.PRESTADO);
             this.tiene = usuario;
             this.fechaDevolucion = LocalDateTime.now().plusDays(14);
-            servicioNotificaciones.enviarNotificacion("El recurso " + this.getNombre() +
-                    " ha sido prestado" + '\n' + "Fecha de devolución: " + fechaDevolucion);
-            System.out.println("Prestamo exitoso");
         }else{
             throw new RecursoNoDisponibleException("El libro no esta disponible");
         }

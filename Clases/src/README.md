@@ -60,3 +60,27 @@ Parte del menú de reservas en consola fue generado con IA
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatter);
 ```
+
+Etapa 3 Issue #13
+
+La funcion enviarNotificaciones, perteneciente a GestorNotificaciones fue generada con IA
+
+```java
+    public void enviarNotificacion(String mensaje) {
+        List<Future<?>> tareas = new ArrayList<>();
+    
+        for (Notificacion canal : canales) {
+            Future<?> tarea = executor.submit(() -> canal.enviar(mensaje));
+            tareas.add(tarea);
+        }
+    
+        for (Future<?> tarea : tareas) {
+            try {
+                tarea.get(); // Espera a que la notificación termine
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace(); // Manejo simple de errores por ahora
+            }
+        }
+    }
+
+```

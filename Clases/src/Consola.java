@@ -316,21 +316,22 @@ public class Consola {
                     try {
                         recurso = this.pedirRecurso();
                         usuario = this.pedirUsuario();
+
+
+                        if (recurso instanceof Prestable prestable && usuario != null) {
+                            try {
+                                myGestorPrestamos.registrarPrestamo(usuario, ((Prestable) recurso));
+                                System.out.println("Recurso prestado exitosamente.");
+                            } catch (RecursoNoDisponibleException | UsuarioNoEncontradoException | DatosErroneosException | RecursoNoEncontradoException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        } else if (recurso == null) {
+                            System.out.println("Recurso no encontrado.");
+                        } else {
+                            System.out.println("No se puede prestar.");
+                        }
                     } catch (UsuarioNoEncontradoException | RecursoNoEncontradoException e) {
                         System.out.println(e.getMessage());
-                    }
-
-                    if (recurso instanceof Prestable prestable && usuario != null) {
-                        try {
-                            myGestorPrestamos.registrarPrestamo(usuario, ((Prestable) recurso));
-                            System.out.println("Recurso prestado exitosamente.");
-                        } catch (RecursoNoDisponibleException | UsuarioNoEncontradoException | DatosErroneosException | RecursoNoEncontradoException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    } else if (recurso == null) {
-                        System.out.println("Recurso no encontrado.");
-                    } else {
-                        System.out.println("No se puede prestar.");
                     }
                     break;
 
@@ -340,20 +341,13 @@ public class Consola {
                     try {
                         recurso_2 = this.pedirRecurso();
                         usuario_2 = this.pedirUsuario();
-                    } catch (UsuarioNoEncontradoException | RecursoNoEncontradoException e) {
-                        System.out.println(e.getMessage());
-                    }
-
-                    if (recurso_2 instanceof Renovable renovable) {
-                        try {
+                        if (recurso_2 instanceof Renovable renovable) {
                             renovable.renovar(usuario_2);
-                        } catch (RecursoNoDisponibleException e) {
-                            System.out.println(e.getMessage());
+                        } else {
+                            System.out.println("No se puede renovar este recurso.");
                         }
-                    } else if (recurso_2 == null) {
-                        System.out.println("Recurso no encontrado.");
-                    } else {
-                        System.out.println("No se puede prestar.");
+                    } catch (RecursoNoDisponibleException | UsuarioNoEncontradoException | RecursoNoEncontradoException e) {
+                        System.out.println(e.getMessage());
                     }
                     break;
                 case 3:
