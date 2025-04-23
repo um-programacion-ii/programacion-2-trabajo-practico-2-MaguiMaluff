@@ -2,6 +2,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import Alertas.AlertaDisponibilidad;
 import Alertas.AlertaVencimiento;
@@ -19,6 +21,7 @@ import Recursos.EstadoRecurso;
 import Modelos.Usuario;
 import Recursos.RecursoDigital;
 import Servicios.ConfiguracionNotificaciones;
+import Servicios.GeneradorReportes;
 
 public class Consola {
     Scanner myObj = new Scanner(System.in);
@@ -77,7 +80,7 @@ public class Consola {
                     gestionReservas();
                     break;
                 case 5:
-                    mostrarReporte();
+                    generarReporteEnSegundoPlano();
                     break;
                 case 6:
                     gestionAlertas();
@@ -558,21 +561,10 @@ public class Consola {
         }
     }
 
-    public void mostrarReporte() {
-        System.out.println("====== Recursos Más Prestados ======");
-        myGestorRecursos.obtenerRecursosMasPrestados().forEach(r ->
-                System.out.println(r.getNombre() + " - Prestado " + (r).getVecesPrestado() + " veces")
-        );
-
-        System.out.println("\n====== Usuarios Más Activos ======");
-        myGestorUsuarios.obtenerUsuariosMasActivos().forEach(u ->
-                System.out.println(u.getName() + " - " + u.getPrestamosRealizados() + " préstamos")
-        );
-
-        System.out.println("\n====== Estadísticas por Categoría ======");
-        myGestorRecursos.estadisticasPorCategoria().forEach((categoria, totalPrestamos) ->
-                System.out.println(categoria + ": " + totalPrestamos + " préstamos")
-        );
+    public void generarReporteEnSegundoPlano() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(new GeneradorReportes(myGestorRecursos, myGestorUsuarios));
+        executor.shutdown();
     }
 
 }
