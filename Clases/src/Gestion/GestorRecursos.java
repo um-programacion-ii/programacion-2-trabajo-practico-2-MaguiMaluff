@@ -135,4 +135,13 @@ public class GestorRecursos {
                 ));
     }
 
+    public void mostrarRecursosDisponibles() {
+        for (RecursoDigital recurso : recursos) {
+            if (recurso instanceof Prestable && recurso.getEstado() == EstadoRecurso.DISPONIBLE) {
+                recurso.showInfo();
+            }
+        }
+    }
+
+
 }
