@@ -21,7 +21,7 @@ public class Main {
         GestorRecursos recurso = consola.myGestorRecursos;
 
 
-/*
+
         consola.myGestorUsuarios.newUser("Carlos", "carlos@mail.com");
         consola.myGestorUsuarios.newUser("Lucia", "lucia@mail.com");
         consola.myGestorUsuarios.newUser("Mateo", "mateo@mail.com");
@@ -45,11 +45,15 @@ public class Main {
         gestor.agregarAudioLibro(EstadoRecurso.DISPONIBLE, "Steve Jobs", "Walter Isaacson", "Narrador C", CategoriaRecurso.HISTORIA);
         gestor.agregarAudioLibro(EstadoRecurso.DISPONIBLE, "Meditaciones", "Marco Aurelio", "Narrador D", CategoriaRecurso.HISTORIA);
         gestor.agregarAudioLibro(EstadoRecurso.DISPONIBLE, "Curso de Python", "Ana Dev", "Narrador E", CategoriaRecurso.EDUCACION);
-*/
+
         gestor.agregarLibro(EstadoRecurso.DISPONIBLE, "Clean Code", "Robert C. Martin", CategoriaRecurso.EDUCACION);
         consola.myGestorUsuarios.newUser("Ana", "ana@mail.com");
         prestamos.registrarPrestamo(usuarios.searchUserName("Ana"), ((Prestable) recurso.buscarPorNombre("Clean Code")));
         Prestamos prestamo = prestamos.buscarPrestamo(recurso.buscarPorNombre("Clean Code"));
+
+        consola.myGestorReservas.reservarRecurso(usuarios.searchUserName("Sofia"), ((Prestable) recurso.buscarPorNombre("Clean Code")), LocalDate.parse("2025-05-07"));
+
+        consola.myGestorPrestamos.devolverPrestamo(recurso.buscarPorNombre("Clean Code"));
 
         boolean continuar = true;
         while (continuar) {

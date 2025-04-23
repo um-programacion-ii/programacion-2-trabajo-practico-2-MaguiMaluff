@@ -98,4 +98,13 @@ En gestorRecursos, la función que busca las categorias más usadas fue generada
                         Collectors.summingLong(r -> (r).getVecesPrestado())
                 ));
     }
+    
+    
 ```
+
+ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+public void iniciarAlertasDisponibilidad() {
+Runnable alerta = new AlertaDisponibilidad(myGestorReservas, myGestorPrestamos, myObj);
+scheduler.scheduleAtFixedRate(alerta, 10, 30, TimeUnit.SECONDS); // comienza en 10s, se repite cada 30s
+}

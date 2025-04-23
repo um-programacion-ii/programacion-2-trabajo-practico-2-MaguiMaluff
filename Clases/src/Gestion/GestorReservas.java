@@ -11,6 +11,7 @@ import Servicios.ServicioNotificacionesSMS;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -46,7 +47,7 @@ public class GestorReservas {
             throw new RecursoNoDisponibleException("Ya existe una reserva para esa fecha.");
         }
 
-        Reservas nueva = new Reservas(usuario, fechaDeseada);
+        Reservas nueva = new Reservas(usuario, fechaDeseada, recurso);
         cola.add(nueva);
         myGestorNotificaciones.enviarNotificacion("Reserva realizada para el " + fechaDeseada);
         nueva.showInfo();
@@ -67,14 +68,6 @@ public class GestorReservas {
                 r.showInfo();
             }
         }
-    }
-
-    public Reservas siguienteReserva(Prestable recurso) {
-        PriorityBlockingQueue<Reservas> cola = reservasPorRecurso.get(recurso);
-        if (cola != null && !cola.isEmpty()) {
-            return cola.poll();
-        }
-        return null;
     }
 
     public Map<Prestable, PriorityBlockingQueue<Reservas>> getReservas() {

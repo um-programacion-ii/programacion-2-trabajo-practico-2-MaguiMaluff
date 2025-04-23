@@ -3,6 +3,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
+import Alertas.AlertaDisponibilidad;
 import Alertas.AlertaVencimiento;
 import Excepciones.DatosErroneosException;
 import Excepciones.RecursoNoDisponibleException;
@@ -28,9 +29,15 @@ public class Consola {
 
     public boolean menu() {
         int choice = -1;
-        AlertaVencimiento alertaVencimiento = new AlertaVencimiento(myGestorPrestamos);
-        alertaVencimiento.verificarAlertas();
+
+
         do {
+            AlertaVencimiento alertaVencimiento = new AlertaVencimiento(myGestorPrestamos);
+            alertaVencimiento.verificarAlertas();
+
+            AlertaDisponibilidad AlertaDisponibilidad = new AlertaDisponibilidad(myGestorReservas, myGestorPrestamos);
+            AlertaDisponibilidad.arrancar();
+
             System.out.println("""
                 1. Gestion Usuarios
                 2. Gestion Recursos
@@ -299,6 +306,8 @@ public class Consola {
                     \
                     5. Listar Prestamos
                     \
+                    6. Mostrar Recursos Disponibles
+                    \
                     0. Menú anterior
                     """);
             try {
@@ -367,6 +376,8 @@ public class Consola {
                 case 5:
                     myGestorPrestamos.listarPrestamos();
                     break;
+                case 6:
+                    myGestorRecursos.mostrarRecursosDisponibles();
                 case 0:
                     break;
                 default:
