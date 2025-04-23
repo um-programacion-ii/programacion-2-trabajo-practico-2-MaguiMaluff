@@ -6,13 +6,12 @@ import Interfaces.Renovable;
 import Recursos.CategoriaRecurso;
 import Recursos.EstadoRecurso;
 import Recursos.RecursoDigital;
-import Servicios.ServicioNotificacionesEmail;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Libro extends RecursoDigital implements Prestable, Renovable {
     private String autor;
-    private LocalDateTime fechaDevolucion = null;
+    private LocalDate fechaDevolucion = null;
     private Usuario tiene = null;
 
     public Libro(EstadoRecurso estate, String autor, String name, CategoriaRecurso categoria) {
@@ -47,7 +46,7 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
     @Override
     public synchronized boolean estaDisponible() {
         if (this.getEstado() == EstadoRecurso.DISPONIBLE) {
-            if (this.getFechaDevolucion() != null && LocalDateTime.now().isBefore(this.getFechaDevolucion())) {
+            if (this.getFechaDevolucion() != null && LocalDate.now().isBefore(this.getFechaDevolucion())) {
                 return false;
             }
             return true;
@@ -56,7 +55,7 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
     }
 
     @Override
-    public LocalDateTime getFechaDevolucion() {
+    public LocalDate getFechaDevolucion() {
         return fechaDevolucion;
     }
 
@@ -66,7 +65,7 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
         if (this.estaDisponible()) {
             this.setEstado(EstadoRecurso.PRESTADO);
             this.tiene = usuario;
-            this.fechaDevolucion = LocalDateTime.now().plusDays(14);
+            this.fechaDevolucion = LocalDate.now().plusDays(14);
 
             System.out.println("[Hilo: " + Thread.currentThread().getName() + "] préstamo exitoso: " + this.getNombre());
         } else {
@@ -82,7 +81,7 @@ public class Libro extends RecursoDigital implements Prestable, Renovable {
         this.setFechaDevolucion(null);
     }
 
-    public void setFechaDevolucion(LocalDateTime fechaDevolucion) {
+    public void setFechaDevolucion(LocalDate fechaDevolucion) {
         this.fechaDevolucion = fechaDevolucion;
     }
 

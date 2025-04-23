@@ -2,10 +2,10 @@ package Interfaces;
 
 import Modelos.Usuario;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public interface Renovable {
     void renovar(Usuario usuario);
-    LocalDateTime getFechaDevolucion();
+    LocalDate getFechaDevolucion();
     String  getNombre();
 }

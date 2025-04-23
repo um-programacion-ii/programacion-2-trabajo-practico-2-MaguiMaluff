@@ -9,7 +9,7 @@ import Servicios.Reservas;
 import Servicios.ServicioNotificacionesEmail;
 import Servicios.ServicioNotificacionesSMS;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -25,13 +25,13 @@ public class GestorReservas {
     }
 
 
-    public void reservarRecurso(Usuario usuario, Prestable recurso, LocalDateTime fechaDeseada) {
-        if (fechaDeseada.isBefore(LocalDateTime.now())) {
+    public void reservarRecurso(Usuario usuario, Prestable recurso, LocalDate fechaDeseada) {
+        if (fechaDeseada.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("La fecha deseada debe ser futura.");
         }
 
         if (!recurso.estaDisponible()) {
-            LocalDateTime fechaDevolucion = recurso.getFechaDevolucion();
+            LocalDate fechaDevolucion = recurso.getFechaDevolucion();
             if (fechaDeseada.isBefore(fechaDevolucion)) {
                 throw new RecursoNoDisponibleException("El recurso está prestado hasta el " + fechaDevolucion + ", no se puede reservar para " + fechaDeseada + ".");
             }
@@ -41,8 +41,7 @@ public class GestorReservas {
         PriorityBlockingQueue<Reservas> cola = reservasPorRecurso.get(recurso);
 
         boolean yaReservadoEseDia = cola.stream()
-                .anyMatch(r -> r.getFechaReserva().toLocalDate().equals(fechaDeseada.toLocalDate()));
-
+                .anyMatch(r -> r.getFechaReserva().equals(fechaDeseada));
         if (yaReservadoEseDia) {
             throw new RecursoNoDisponibleException("Ya existe una reserva para esa fecha.");
         }

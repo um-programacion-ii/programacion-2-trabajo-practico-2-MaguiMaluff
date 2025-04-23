@@ -16,10 +16,9 @@ import Servicios.Reservas;
 import Servicios.ServicioNotificacionesEmail;
 import Servicios.ServicioNotificacionesSMS;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedMap;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class GestorPrestamos {
@@ -50,8 +49,8 @@ public class GestorPrestamos {
             System.out.println("Analizando el usuario... ");
             if (!siguiente.getUsuario().equals(usuario)) {
                 System.out.println("Verificando fechas... ");
-                LocalDateTime fechaReserva = siguiente.getFechaReserva();
-                if (fechaReserva.isBefore(LocalDateTime.now().plusDays(14))) {
+                LocalDate fechaReserva = siguiente.getFechaReserva();
+                if (fechaReserva.isBefore(LocalDate.now().plusDays(1))) {
                     throw new RecursoNoDisponibleException("Este recurso está reservado por otro usuario durante este período.");
                 }
             }
@@ -121,8 +120,17 @@ public class GestorPrestamos {
         for (Prestamos prestamo : prestamos) {
             if (prestamo.getRecurso().equals(recurso)) {
                 prestamo.showInfo();
+                return prestamo;
             }
         }
         throw new RecursoNoEncontradoException("El recurso no fue encontrado");
+    }
+
+    public List<Prestamos> getTodosLosPrestamos(){
+        return prestamos;
+    }
+
+    public GestorNotificaciones getMyGestorNotificaciones() {
+        return myGestorNotificaciones;
     }
 }
