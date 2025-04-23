@@ -5,20 +5,20 @@ import java.util.*;
 
 import Alertas.AlertaDisponibilidad;
 import Alertas.AlertaVencimiento;
+import Alertas.NivelUrgencia;
+import Alertas.RecordatorioPeriodico;
 import Excepciones.DatosErroneosException;
 import Excepciones.RecursoNoDisponibleException;
 import Excepciones.RecursoNoEncontradoException;
 import Excepciones.UsuarioNoEncontradoException;
-import Gestion.GestorPrestamos;
-import Gestion.GestorRecursos;
-import Gestion.GestorReservas;
-import Gestion.GestorUsuarios;
+import Gestion.*;
 import Interfaces.Prestable;
 import Interfaces.Renovable;
 import Recursos.CategoriaRecurso;
 import Recursos.EstadoRecurso;
 import Modelos.Usuario;
 import Recursos.RecursoDigital;
+import Servicios.ConfiguracionNotificaciones;
 
 public class Consola {
     Scanner myObj = new Scanner(System.in);
@@ -26,10 +26,14 @@ public class Consola {
     GestorRecursos myGestorRecursos = new GestorRecursos();
     GestorReservas myGestorReservas = new GestorReservas();
     GestorPrestamos myGestorPrestamos = new GestorPrestamos(myGestorReservas);
+    GestorAlertas gestorAlertas = new GestorAlertas();
+    RecordatorioPeriodico recordatorioPeriodico = new RecordatorioPeriodico(gestorAlertas);
+    ConfiguracionNotificaciones configuracionNotificaciones = new ConfiguracionNotificaciones();
+
+
 
     public boolean menu() {
         int choice = -1;
-
 
         do {
             AlertaVencimiento alertaVencimiento = new AlertaVencimiento(myGestorPrestamos);
@@ -40,10 +44,17 @@ public class Consola {
 
             System.out.println("""
                 1. Gestion Usuarios
+                \
                 2. Gestion Recursos
+                \
                 3. Gestion Prestamos
+                \
                 4. Gestion Reservas
+                \
                 5. Mostrar Reportes
+                \
+                6. Gestion Alertas
+                \
                 0. Salir
                 """);
 
@@ -54,16 +65,27 @@ public class Consola {
             }
 
             switch (choice) {
-                case 1 -> gestionUsuario();
-                case 2 -> gestionRecursos();
-                case 3 -> gestionPrestamos();
-                case 4 -> gestionReservas();
-                case 5 -> mostrarReporte();
-                case 0 -> {
+                case 1:
+                    gestionUsuario();
+                    break;
+                case 2:
+                    gestionRecursos();break;
+                case 3:
+                    gestionPrestamos();
+                    break;
+                case 4:
+                    gestionReservas();
+                    break;
+                case 5:
+                    mostrarReporte();
+                    break;
+                case 6:
+                    gestionAlertas();
+                    break;
+                case 0:
                     System.out.println("Adios");
                     myGestorPrestamos.getMyGestorNotificaciones().cerrar();
                     return false;
-                }
             }
         } while (choice != 0);
         return true;
@@ -447,6 +469,76 @@ public class Consola {
 
         } while (choice != 0);
     }
+
+    public void gestionAlertas() {
+        int choice = -1;
+        do{
+            System.out.println("""
+                1. Configurar nivel de urgencia de notificaciones
+                \
+                2. Ver historial de alertas
+                \
+                3. Iniciar recordatorios periódicos
+                \
+                4. Detener recordatorios periódicos
+                \
+                0. Salir
+                """);
+
+            int opcion = myObj.nextInt();
+            myObj.nextLine();
+
+            switch (opcion) {
+                case 1:
+                    configurarNivelUrgencia();
+                    break;
+                case 2:
+                    gestorAlertas.mostrarHistorial();
+                    break;
+                case 3:
+                    recordatorioPeriodico.iniciarRecordatorios();
+                    break;
+                case 4:
+                    recordatorioPeriodico.detenerRecordatorios();
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+                    break;
+            }
+        }while (choice !=0);
+    }
+
+    private void configurarNivelUrgencia() {
+        System.out.println("Seleccione el nivel de urgencia para las notificaciones:");
+        System.out.println("1. INFO");
+        System.out.println("2. WARNING");
+        System.out.println("3. ERROR");
+
+        int opcion = myObj.nextInt();
+        myObj.nextLine();
+
+        switch (opcion) {
+            case 1:
+                configuracionNotificaciones.establecerNivelUrgencia(NivelUrgencia.INFO);
+                break;
+            case 2:
+                configuracionNotificaciones.establecerNivelUrgencia(NivelUrgencia.WARNING);
+                break;
+            case 3:
+                configuracionNotificaciones.establecerNivelUrgencia(NivelUrgencia.ERROR);
+                break;
+            case 0:
+                break;
+            default:
+                System.out.println("Opción no válida.");
+                break;
+        }
+
+        System.out.println("Nivel de urgencia configurado a: " + configuracionNotificaciones.obtenerNivelUrgencia());
+    }
+
 
     private RecursoDigital pedirRecurso() throws RecursoNoEncontradoException{
         System.out.print("Nombre del recurso: ");
