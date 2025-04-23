@@ -2,12 +2,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
-import Alertas.AlertaThread;
 import Alertas.AlertaVencimiento;
 import Excepciones.DatosErroneosException;
 import Excepciones.RecursoNoDisponibleException;
@@ -23,7 +18,6 @@ import Recursos.CategoriaRecurso;
 import Recursos.EstadoRecurso;
 import Modelos.Usuario;
 import Recursos.RecursoDigital;
-import Servicios.Prestamos;
 
 public class Consola {
     Scanner myObj = new Scanner(System.in);
