@@ -1,10 +1,11 @@
 package Interfaces;
-import java.time.LocalDateTime;
 import Modelos.Usuario;
+
+import java.time.LocalDate;
 
 public interface Prestable {
     boolean estaDisponible();
-    LocalDateTime getFechaDevolucion();
+    LocalDate getFechaDevolucion();
     void prestar(Usuario usuario);
     void resetearFechaEstado();
 }

@@ -1,8 +1,9 @@
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Scanner;
+import java.util.*;
 
+import Alertas.AlertaVencimiento;
 import Excepciones.DatosErroneosException;
 import Excepciones.RecursoNoDisponibleException;
 import Excepciones.RecursoNoEncontradoException;
@@ -25,50 +26,40 @@ public class Consola {
     GestorReservas myGestorReservas = new GestorReservas();
     GestorPrestamos myGestorPrestamos = new GestorPrestamos(myGestorReservas);
 
-
     public boolean menu() {
         int choice = -1;
+        AlertaVencimiento alertaVencimiento = new AlertaVencimiento(myGestorPrestamos);
+        alertaVencimiento.verificarAlertas();
         do {
             System.out.println("""
-                    1. Gestion Usuarios
-                    \
-                    2. Gestion Recursos
-                    \
-                    3. Gestion Prestamos
-                    \
-                    4. Gestion Reservas
-                    \
-                    5. Mostrar Reportes
-                    \
-                    0. Salir
-                    """);
+                1. Gestion Usuarios
+                2. Gestion Recursos
+                3. Gestion Prestamos
+                4. Gestion Reservas
+                5. Mostrar Reportes
+                0. Salir
+                """);
+
             try {
                 choice = Integer.parseInt(myObj.nextLine());
             } catch (Exception e) {
                 System.out.println("Opcion no disponible");
             }
+
             switch (choice) {
-                case 1:
-                    gestionUsuario();
-                    break;
-                case 2:
-                    gestionRecursos();
-                    break;
-                case 3:
-                    gestionPrestamos();
-                    break;
-                case 4:
-                    gestionReservas();
-                    break;
-                case 5:
-                    mostrarReporte();
-                    break;
-                case 0:
+                case 1 -> gestionUsuario();
+                case 2 -> gestionRecursos();
+                case 3 -> gestionPrestamos();
+                case 4 -> gestionReservas();
+                case 5 -> mostrarReporte();
+                case 0 -> {
                     System.out.println("Adios");
+                    myGestorPrestamos.getMyGestorNotificaciones().cerrar();
                     return false;
+                }
             }
         } while (choice != 0);
-    return true;
+        return true;
     }
 
     public void gestionUsuario() {
@@ -407,8 +398,8 @@ public class Consola {
                     try {
                         System.out.println("Ingrese la fecha deseada para la reserva (formato: yyyy-MM-dd HH:mm):");
                         String fechaStr = myObj.nextLine();
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-                        LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatter);
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        LocalDate fecha = LocalDate.parse(fechaStr, formatter);
 
                         RecursoDigital recurso = this.pedirRecurso();
                         recurso.showInfo();

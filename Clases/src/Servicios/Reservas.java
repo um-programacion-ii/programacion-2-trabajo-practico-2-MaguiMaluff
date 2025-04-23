@@ -2,13 +2,13 @@ package Servicios;
 
 import Modelos.Usuario;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Reservas implements Comparable<Reservas> {
     private Usuario usuario;
-    private LocalDateTime fechaReserva;
+    private LocalDate fechaReserva;
 
-    public Reservas(Usuario usuario, LocalDateTime fechaReserva) {
+    public Reservas(Usuario usuario, LocalDate fechaReserva) {
         this.usuario = usuario;
         this.fechaReserva = fechaReserva;
     }
@@ -17,7 +17,7 @@ public class Reservas implements Comparable<Reservas> {
         return usuario;
     }
 
-    public LocalDateTime getFechaReserva() {
+    public LocalDate getFechaReserva() {
         return fechaReserva;
     }
     public void showInfo() {

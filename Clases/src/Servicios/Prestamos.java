@@ -3,19 +3,19 @@ package Servicios;
 import Interfaces.Prestable;
 import Modelos.Usuario;
 import Recursos.RecursoDigital;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Prestamos {
     private final Usuario usuario;
     private final Prestable recurso;
-    private final LocalDateTime fechaPrestamo;
-    private final LocalDateTime fechaDevolucionEstimada;
+    private final LocalDate fechaPrestamo;
+    private  LocalDate fechaDevolucionEstimada;
 
     public Prestamos(Usuario usuario, Prestable recurso) {
         this.usuario = usuario;
         this.recurso = recurso;
-        this.fechaPrestamo = LocalDateTime.now();
-        this.fechaDevolucionEstimada = LocalDateTime.now().plusDays(14);
+        this.fechaPrestamo = LocalDate.now();
+        this.fechaDevolucionEstimada = LocalDate.now().plusDays(14);
     }
 
     public Usuario getUsuario() {
@@ -27,12 +27,16 @@ public class Prestamos {
     }
 
 
-    public LocalDateTime getFechaPrestamo() {
+    public LocalDate getFechaPrestamo() {
         return fechaPrestamo;
     }
 
-    public LocalDateTime getFechaDevolucionEstimada() {
+    public LocalDate getFechaDevolucionEstimada() {
         return fechaDevolucionEstimada;
+    }
+    public void setFechaDevolucionEstimada(LocalDate f){
+        this.fechaDevolucionEstimada = f;
+
     }
 
     public void showInfo() {

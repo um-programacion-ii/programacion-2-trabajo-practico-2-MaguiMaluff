@@ -6,14 +6,13 @@ import Interfaces.Renovable;
 import Recursos.CategoriaRecurso;
 import Recursos.EstadoRecurso;
 import Recursos.RecursoDigital;
-import Servicios.ServicioNotificacionesSMS;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Revista extends RecursoDigital implements Prestable, Renovable {
     private String marca;
     private Integer issue;
-    private LocalDateTime fechaDevolucion = null;
+    private LocalDate fechaDevolucion = null;
     private Usuario tiene = null;
 
     public Revista(EstadoRecurso estate, String marca, Integer issue, String name, CategoriaRecurso categoria) {
@@ -42,7 +41,7 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
         if (this.estaDisponible()) {
             this.setEstado(EstadoRecurso.PRESTADO);
             this.tiene = usuario;
-            this.fechaDevolucion = LocalDateTime.now().plusDays(14);
+            this.fechaDevolucion = LocalDate.now().plusDays(14);
 
             System.out.println("[Hilo: " + Thread.currentThread().getName() + "] préstamo exitoso: " + this.getNombre());
         } else {
@@ -91,11 +90,11 @@ public class Revista extends RecursoDigital implements Prestable, Renovable {
         this.issue = issue;
     }
 
-    public LocalDateTime getFechaDevolucion() {
+    public LocalDate getFechaDevolucion() {
         return fechaDevolucion;
     }
 
-    public void setFechaDevolucion(LocalDateTime fecha) {
+    public void setFechaDevolucion(LocalDate fecha) {
         this.fechaDevolucion = fecha;
     }
 
